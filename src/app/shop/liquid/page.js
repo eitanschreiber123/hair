@@ -40,10 +40,7 @@ export default function Home() {
       <div>
       <h1>Amino Acid+ Crop Booster</h1>
       <h1 style={{margin:'0 20px'}}>USD 3.68</h1>
-      <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
-        addItem('liquid')
-        router.push("/cart")
-      }}>Add to cart</button>
+      <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>addItem('liquid')}>Add to cart</button>
       </div>
     </section>
     <footer style={{width:'100%'}}>
