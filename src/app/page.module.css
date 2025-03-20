@@ -1,0 +1,25 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width:100vw;
+}
+.box {
+  display: flex;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    width:70%;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+.box:hover {
+  background-color: #4fad33;
+}
+.video {
+  width: 640px;
+}
+@media screen and (max-width: 640px) {
+  .video {
+      width:100vw;
+  }
+}

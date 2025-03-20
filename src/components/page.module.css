@@ -1,0 +1,17 @@
+.wr a, .wr p {
+    margin: 0 10px;
+}
+@media screen and (max-width: 840px) {
+    .wr {
+        flex-direction:column;
+        align-items: center;
+    }
+    .wr > div {
+        width:100%;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+    .wr a, .wr p {
+        margin:10px;
+    }
+  }
