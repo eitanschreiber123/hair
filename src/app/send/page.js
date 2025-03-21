@@ -105,7 +105,7 @@ export default function Home() {
         value={info}
         onChange={e => setInfo(e.target.value)}/>
          </div>}
-          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
+          <button disabled={newOrder.boxes == 0 || newOrder.payment == null  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
             const timestamp = Date.now()
             const date = new Date(timestamp)
             const year = date.getFullYear();
@@ -173,7 +173,7 @@ export default function Home() {
         value={newSub.info}
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value})}/>
          </div>}
-          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
+          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
             console.log(newSub)
             updateUser({sub:newSub})}}>Submit</button>
          </div>
@@ -216,7 +216,7 @@ export default function Home() {
         value={newSub.info}
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value})}/>
          </div>}
-          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
+          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
          </div>
                 </div>}
             </div>
