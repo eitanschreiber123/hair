@@ -96,7 +96,7 @@ export default function Home() {
           </div>
           <div>
             <h2>Pickup location</h2>
-            <div style={{display:'flex'}}>{locations.map((l, ind) => <p onClick={p=>{
+            <div style={{display:'flex',flexWrap:'wrap'}}>{locations.map((l, ind) => <p onClick={p=>{
               setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
               setSelected(ind)
               }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
