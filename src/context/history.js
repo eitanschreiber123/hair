@@ -7,7 +7,7 @@ const AuthContext = createContext({});
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-  const [pickupOrders, setOrders] = useState([
+  const [pickupOrders, setPickupOrders] = useState([
     {location: 'Cape town, south africa', orders:[]},
     {location: 'Nairobi, kenya', orders:[]},
     {location: 'Arusha, tanzania', orders:[]},
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     if (storedActiveUser) setActiveUser(JSON.parse(storedActiveUser));
 
     const storedPickupOrders = localStorage.getItem("pickupOrders");
-    if (storedPickupOrders) setUsers(JSON.parse(storedPickupOrders));
+    if (storedPickupOrders) setPickupOrders(JSON.parse(storedPickupOrders));
   }, []);
 
   // Save to localStorage on users or activeUser change
@@ -100,12 +100,18 @@ export const AuthProvider = ({ children }) => {
     updateUser({ orders: updatedOrders });
   };
 
-  const addPickupOrder = order => {
-    return 1
-  }
-
+  const addPickupOrder = (location, order) => {
+    setPickupOrders((prevOrders) =>
+      prevOrders.map((pickup) =>
+        pickup.location.toLowerCase() === location.toLowerCase()
+          ? { ...pickup, orders: [...pickup.orders, order] }
+          : pickup
+      )
+    );
+  };
+  
   return (
-    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder }}>
+    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders }}>
       {children}
     </AuthContext.Provider>
   );

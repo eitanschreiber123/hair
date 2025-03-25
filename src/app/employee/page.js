@@ -7,29 +7,13 @@ import {useAuth} from '../../context/history'
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders} = useAuth()
   const [location, setLocation] = useState(0)
   const [orders, confirm] = useState([
-    {location:'Cape town, south africa', orders: [
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''}
-    ]},
-    {location:'Nairobi, kenya', orders: [
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''}
-    ]},
-    {location:'Arusha, Tanzania', orders: [
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''}
-    ]},
-    {location:'dar es salam, Tanzania', orders: [
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''},
-        {name:'',date:'',status:'pending',amount:''}
-    ]}
+    {location:'Cape town, south africa', orders: []},
+    {location:'Nairobi, kenya', orders: []},
+    {location:'Arusha, Tanzania', orders: []},
+    {location:'dar es salam, Tanzania', orders: []}
   ])
     const router = useRouter()
       const redirect = () => {
@@ -40,6 +24,11 @@ export default function Home() {
           router.push("/send")
         }
       }
+      useEffect(() => {
+        if (pickupOrders) {
+            confirm(pickupOrders)
+        }
+      }, [])
   return (
       <main style={{display:'flex',flexDirection:'column',textAlign:'center'}}>
         <section style={{display:'flex',height:'100vh'}}>

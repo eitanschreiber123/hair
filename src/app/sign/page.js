@@ -16,7 +16,6 @@ export default function Home() {
   const handleSignUp = () => signUp(name, email, password)
   useEffect(() => {
     if (activeUser) {
-      console.log(users, activeUser)
     router.push("/send")
     }
   }, [users])

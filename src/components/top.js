@@ -8,7 +8,7 @@ const Top = ({image, first, second, whichLink}) => {
             <div style={{display:'flex'}}>
               <Link style={{fontSize:'1.5em',color:'white'}} href="/about">About us</Link>
               <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>whichLink()}>Barber Portal</p>
-              <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}}>Employee Portal</p>
+              <Link style={{fontSize:'1.5em',color:'white'}} href="/employee">Employee Portal</Link>
               <Link style={{fontSize:'1.5em',color:'white'}} href="/shop">Our products</Link>
               <Link style={{fontSize:'1.5em',color:'white'}} href="/impact">Our impact</Link>
               <Link style={{fontSize:'1.5em',color:'white'}} href="/contact">Contact</Link>

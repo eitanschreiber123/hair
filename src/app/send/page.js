@@ -9,7 +9,7 @@ import {useAuth} from '../../context/history'
 const locations = ['Cape town, south africa', 'Nairobi, kenya', 'Arusha, tanzania', 'Dar es salam, tanzania']
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders} = useAuth()
   const [selected, setSelected] = useState(0)
   const [display, setDisplay] = useState('order')
   const [column1, setColumn1] = useState('list')
@@ -31,10 +31,9 @@ export default function Home() {
     }
   })
   useEffect(() => {
-    console.log(activeUser)
     if (activeUser) {
       setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info, location:'Cape town, south africa'})
-    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo, location:activeUser.sub.location})
+    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo, location: activeUser.sub?.location || 'Cape town, south africa'})
     setName(activeUser.name)
     setAddress(activeUser.address)
     setInfo(activeUser.info)
@@ -44,10 +43,6 @@ export default function Home() {
     setEmail(activeUser.email)
     }
   },[])
-  useEffect(() => {
-    setNewOrder({boxes: newOrder.boxes,name:newOrder.name,address:newOrder.address,email:newOrder.email,payment:payment,info:info, location:newOrder.location})
-    setNewSub({sub:newSub.sub,boxes: newSub.boxes,name:newSub.name,address:newSub.address,email:newSub.email,payment:subPayment,info:subInfo, location:newSub.location})
-  }, [payment, info, subPayment, subInfo])
   useEffect(() => {
     if (activeUser && activeUser.sub) {
       setColumn2('first')
@@ -104,9 +99,18 @@ export default function Home() {
           <div style={{ display: 'flex',flexDirection: 'column',alignItems:'center'}}>
           <h2>How do you want to get paid</h2>
           <div style={{ display: 'flex'}}>
-          <button onClick={()=>setPayment('paypal')} style={{backgroundColor:newOrder.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
-          <button onClick={()=>setPayment('zelle')} style={{backgroundColor:newOrder.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
-          <button onClick={()=>setPayment('bit')} style={{backgroundColor:newOrder.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
+          <button onClick={()=>{
+            setPayment('paypal')
+            setNewOrder({...newOrder, payment:payment})
+            }} style={{backgroundColor:newOrder.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
+          <button onClick={()=>{
+            setPayment('zelle')
+            setNewOrder({...newOrder, payment:payment})
+            }} style={{backgroundColor:newOrder.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
+          <button onClick={()=>{
+            setPayment('bit')
+            setNewOrder({...newOrder, payment:payment})
+            }} style={{backgroundColor:newOrder.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
           </div>
          {newOrder.payment && <div>
           <p>{payment == 'paypal' || payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'}</p>
@@ -114,19 +118,46 @@ export default function Home() {
         name="info"
         placeholder={payment == 'paypal' || payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'}
         value={info}
-        onChange={e => setInfo(e.target.value)}/>
+        onChange={e => {
+          setInfo(e.target.value)
+          setNewOrder({...newOrder, info:info})
+          }}/>
          </div>}
-          <button disabled={newOrder.boxes == 0 || newOrder.payment == null  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
-            const timestamp = Date.now()
-            const date = new Date(timestamp)
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            const finalDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-            addOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,date:finalDate,location:newOrder.location})}}>Submit</button>
+          <button disabled={newOrder.boxes == 0 || newOrder.payment == null  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={() => {
+    const timestamp = Date.now();
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const finalDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    // Create the order object
+    const orderData = {
+      boxes: newOrder.boxes,
+      name: newOrder.name,
+      address: address,
+      email: newOrder.email,
+      payment: newOrder.payment,
+      info: newOrder.info,
+      date: finalDate,
+      location: newOrder.location,
+    };
+
+    // Add order to user orders
+    addOrder(orderData);
+
+    // Add to pickup orders at corresponding location
+    addPickupOrder(newOrder.location, {
+      name: orderData.name,
+      date: orderData.date,
+      status: 'pending',
+      amount: '',
+    });
+   
+  }}>Submit</button>
          </div>
             </div>}
           </div>}
@@ -193,7 +224,21 @@ export default function Home() {
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
           <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
-            console.log(newSub)
+            const timestamp = Date.now();
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            const finalDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            addPickupOrder(newSub.location, {
+              name: newSub.name,
+              date: finalDate,
+              status: 'pending',
+              amount: '',
+            });
             updateUser({sub:newSub})}}>Submit</button>
          </div>
                 </div>
