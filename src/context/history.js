@@ -7,6 +7,12 @@ const AuthContext = createContext({});
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
+  const [pickupOrders, setOrders] = useState([
+    {location: 'Cape town, south africa', orders:[]},
+    {location: 'Nairobi, kenya', orders:[]},
+    {location: 'Arusha, tanzania', orders:[]},
+    {location: 'Dar es salam, tanzania', orders:[]}
+  ])
   const [activeUser, setActiveUser] = useState(null);
 
   // Load from localStorage on mount
@@ -16,13 +22,17 @@ export const AuthProvider = ({ children }) => {
 
     if (storedUsers) setUsers(JSON.parse(storedUsers));
     if (storedActiveUser) setActiveUser(JSON.parse(storedActiveUser));
+
+    const storedPickupOrders = localStorage.getItem("pickupOrders");
+    if (storedPickupOrders) setUsers(JSON.parse(storedPickupOrders));
   }, []);
 
   // Save to localStorage on users or activeUser change
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("activeUser", JSON.stringify(activeUser));
-  }, [users, activeUser]);
+    localStorage.setItem("pickupOrders", JSON.stringify(pickupOrders));
+  }, [users, activeUser, pickupOrders]);
 
   // Sign up a new user
   const signUp = (name, email, password) => {
@@ -89,6 +99,10 @@ export const AuthProvider = ({ children }) => {
     const updatedOrders = [...activeUser.orders, order];
     updateUser({ orders: updatedOrders });
   };
+
+  const addPickupOrder = order => {
+    return 1
+  }
 
   return (
     <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder }}>

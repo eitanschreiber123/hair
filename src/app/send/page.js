@@ -6,8 +6,11 @@ import Top from '@/components/top';
 import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
+const locations = ['Cape town, south africa', 'Nairobi, kenya', 'Arusha, tanzania', 'Dar es salam, tanzania']
+
 export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const [selected, setSelected] = useState(0)
   const [display, setDisplay] = useState('order')
   const [column1, setColumn1] = useState('list')
   const [column2, setColumn2] = useState('first')
@@ -18,8 +21,8 @@ export default function Home() {
   const [payment, setPayment] = useState(null)
   const [subInfo, setSubInfo] = useState('')
   const [subPayment, setSubPayment] = useState(null)
-  const [newOrder, setNewOrder] = useState({boxes: 0,name:'',address:'',email:'',payment:null,info:''})
-  const [newSub, setNewSub] = useState({sub:'weekly',boxes: 0,name:'',address:'',email:'',payment:null,info:''})
+  const [newOrder, setNewOrder] = useState({boxes: 0,name:'',address:'',email:'',payment:null,info:'', location:'Cape town, south africa'})
+  const [newSub, setNewSub] = useState({sub:'weekly',boxes: 0,name:'',address:'',email:'',payment:null,info:'',location:'Cape town, south africa'})
   const router = useRouter()
   const redirect = () => router.push(activeUser ? "/send" : "/sign");
   useEffect(() => {
@@ -30,8 +33,8 @@ export default function Home() {
   useEffect(() => {
     console.log(activeUser)
     if (activeUser) {
-      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info})
-    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo})
+      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info, location:'Cape town, south africa'})
+    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo, location:activeUser.sub.location})
     setName(activeUser.name)
     setAddress(activeUser.address)
     setInfo(activeUser.info)
@@ -42,8 +45,8 @@ export default function Home() {
     }
   },[])
   useEffect(() => {
-    setNewOrder({boxes: newOrder.boxes,name:newOrder.name,address:newOrder.address,email:newOrder.email,payment:payment,info:info})
-    setNewSub({sub:newSub.sub,boxes: newSub.boxes,name:newSub.name,address:newSub.address,email:newSub.email,payment:subPayment,info:subInfo})
+    setNewOrder({boxes: newOrder.boxes,name:newOrder.name,address:newOrder.address,email:newOrder.email,payment:payment,info:info, location:newOrder.location})
+    setNewSub({sub:newSub.sub,boxes: newSub.boxes,name:newSub.name,address:newSub.address,email:newSub.email,payment:subPayment,info:subInfo, location:newSub.location})
   }, [payment, info, subPayment, subInfo])
   useEffect(() => {
     if (activeUser && activeUser.sub) {
@@ -70,6 +73,7 @@ export default function Home() {
               {activeUser && activeUser.orders.map(o =><div>
                 <p>Date: {o.date}</p>
                 <p>boxes: {o.boxes}</p>
+                <p>location: {o.location}</p>
                 <p>payment: {o.payment}: {o.info}</p>
               </div>)}
             <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>setColumn1('new')}>new order</button></div>
@@ -78,17 +82,24 @@ export default function Home() {
           <p>We'll send you boxes and 5 bags per box, send us back a box with 5 bags full of hair and we'll pay you 200$ per box</p>
             <h2>How many boxes do you want?</h2>
             <p>
-              <button onClick={()=>setNewOrder({boxes:Math.max(0, newOrder.boxes - 1),name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
+              <button onClick={()=>setNewOrder({boxes:Math.max(0, newOrder.boxes - 1),name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
               <span>{newOrder.boxes}</span>
-              <button onClick={p=>setNewOrder({boxes:newOrder.boxes+1,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
+              <button onClick={p=>setNewOrder({boxes:newOrder.boxes+1,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
               </p>
           <div>
-            <p>Address</p>
+            <p>Shipping Address</p>
             <input type="text"
         name="address"
         placeholder="address"
         value={address}
         onChange={e => setAddress(e.target.value)}/>
+          </div>
+          <div>
+            <h2>Pickup location</h2>
+            <div style={{display:'flex'}}>{locations.map((l, ind) => <p onClick={p=>{
+              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
+              setSelected(ind)
+              }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
           </div>
           <div style={{ display: 'flex',flexDirection: 'column',alignItems:'center'}}>
           <h2>How do you want to get paid</h2>
@@ -115,7 +126,7 @@ export default function Home() {
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const seconds = String(date.getSeconds()).padStart(2, '0');
             const finalDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-            addOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,date:finalDate})}}>Submit</button>
+            addOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,date:finalDate,location:newOrder.location})}}>Submit</button>
          </div>
             </div>}
           </div>}
@@ -126,6 +137,7 @@ export default function Home() {
                   <div>
                 <h2>Current subscription: {activeUser.sub.sub}</h2>
                 <p>{activeUser.sub.boxes} boxes</p>
+                <p>location: {activeUser.sub.location}</p>
                 <h2>payment info</h2>
                 <p>payment: {activeUser.sub.payment}</p>
                 <p>{activeUser.sub.payment == 'paypal' || activeUser.sub.payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'} {activeUser.sub.info}</p>
@@ -142,28 +154,35 @@ export default function Home() {
                     <h1>Change your subscription</h1>
                 <h2>How many boxes do you want?</h2>
             <div style={{ display: 'flex'}}>
-              <button onClick={()=>setNewSub({sub:'weekly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:newSub.sub == 'weekly' ? '#4fad33' : 'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Weekly</button>
-            <button onClick={()=>setNewSub({sub:'monthly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:newSub.sub == 'weekly' ? 'white' : '#4fad33', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Monthly</button>
+              <button onClick={()=>setNewSub({sub:'weekly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.sub == 'weekly' ? '#4fad33' : 'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Weekly</button>
+            <button onClick={()=>setNewSub({sub:'monthly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.sub == 'weekly' ? 'white' : '#4fad33', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Monthly</button>
               </div>
             <p>
-              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:Math.max(0, newSub.boxes - 1),name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
+              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:Math.max(0, newSub.boxes - 1),name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
               <span>{newSub.boxes}</span>
-              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes+1,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
+              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes+1,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
               </p>
           <div>
-            <p>Address</p>
+            <p>Shipping Address</p>
             <input type="text"
         name="address"
         placeholder="address"
         value={address}
         onChange={e => setAddress(e.target.value)}/>
           </div>
+          <div>
+            <h2>Pickup location</h2>
+            <div style={{display:'flex'}}>{locations.map((l, ind) => <p onClick={p=>{
+              setNewSub({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
+              setSelected(ind)
+              }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
+          </div>
           <div style={{ display: 'flex',flexDirection: 'column',alignItems:'center'}}>
           <h2>How do you want to get paid</h2>
           <div style={{ display: 'flex'}}>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'paypal',info:newSub.info})} style={{backgroundColor:newSub.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'zelle',info:newSub.info})} style={{backgroundColor:newSub.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'bit',info:newSub.info})} style={{backgroundColor:newSub.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'paypal',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'zelle',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'bit',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
           </div>
          {newSub.payment && <div>
           <p>{(newSub.payment == 'paypal' || newSub.payment == 'zelle') ? 'Email' : 'Bitcoin wallet address'}</p>
@@ -171,7 +190,7 @@ export default function Home() {
         name="info"
         placeholder={newSub.payment == 'paypal' || newSub.payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'}
         value={newSub.info}
-        onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value})}/>
+        onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
           <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
             console.log(newSub)
@@ -185,28 +204,35 @@ export default function Home() {
           <p>We'll send you boxes and 5 bags per box, send us back a box with 5 bags full of hair and we'll pay you 200$ per box</p>
             <h2>How many boxes do you want?</h2>
             <div style={{ display: 'flex'}}>
-              <button onClick={()=>setNewSub({sub:'weekly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:newSub.sub == 'weekly' ? '#4fad33' : 'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Weekly</button>
-            <button onClick={()=>setNewSub({sub:'monthly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:newSub.sub == 'weekly' ? 'white' : '#4fad33', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Monthly</button>
+              <button onClick={()=>setNewSub({sub:'weekly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.sub == 'weekly' ? '#4fad33' : 'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Weekly</button>
+            <button onClick={()=>setNewSub({sub:'monthly',boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.sub == 'weekly' ? 'white' : '#4fad33', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Monthly</button>
               </div>
             <p>
-              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:Math.max(0, newSub.boxes - 1),name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
+              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:Math.max(0, newSub.boxes - 1),name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
               <span>{newSub.boxes}</span>
-              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes+1,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
+              <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes+1,name:name,address:address,email:email,payment:newSub.payment,info:newSub.info,location:newSub.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
               </p>
           <div>
-            <p>Address</p>
+            <p>Shipping Address</p>
             <input type="text"
         name="address"
         placeholder="address"
         value={address}
         onChange={e => setAddress(e.target.value)}/>
           </div>
+          <div>
+            <h2>Pickup location</h2>
+            <div style={{display:'flex'}}>{locations.map((l, ind) => <p onClick={p=>{
+              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
+              setSelected(ind)
+              }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
+          </div>
           <div style={{ display: 'flex',flexDirection: 'column',alignItems:'center'}}>
           <h2>How do you want to get paid</h2>
           <div style={{ display: 'flex'}}>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'paypal',info:newSub.info})} style={{backgroundColor:newSub.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'zelle',info:newSub.info})} style={{backgroundColor:newSub.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
-          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'bit',info:newSub.info})} style={{backgroundColor:newSub.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'paypal',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='paypal'?'#4fad33':'white',border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Paypal</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'zelle',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='zelle'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Zelle</button>
+          <button onClick={()=>setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:'bit',info:newSub.info,location:newSub.location})} style={{backgroundColor:newSub.payment=='bit'?'#4fad33':'white', border:'1px solid black',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Bitcoin</button>
           </div>
          {newSub.payment && <div>
           <p>{newSub.payment == 'paypal' || newSub.payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'}</p>
@@ -214,7 +240,7 @@ export default function Home() {
         name="info"
         placeholder={(newSub.payment == 'paypal' || newSub.payment == 'zelle') ? 'Email' : 'Bitcoin wallet address'}
         value={newSub.info}
-        onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value})}/>
+        onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
           <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
          </div>
