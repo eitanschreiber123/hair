@@ -32,8 +32,8 @@ export default function Home() {
   return (
       <main style={{display:'flex',flexDirection:'column',textAlign:'center'}}>
         <section style={{display:'flex',height:'100vh'}}>
-        <section style={{height:'100%',width:'20%'}}>
-            {orders.map((o, ind) => <p onClick={()=>setLocation(ind)}>{o.location}</p>)}
+        <section style={{height:'100%',width:'25%',padding:'10px'}}>
+            {orders.map((o, ind) => <p style={{margin:'10px 0'}} onClick={()=>setLocation(ind)}>{o.location}</p>)}
         </section>
         <section style={{height:'100%',flex:1}}>
             <h1>{orders[location].location}</h1>
