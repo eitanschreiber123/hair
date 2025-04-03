@@ -21,8 +21,8 @@ export default function Home() {
   const [payment, setPayment] = useState(null)
   const [subInfo, setSubInfo] = useState('')
   const [subPayment, setSubPayment] = useState(null)
-  const [newOrder, setNewOrder] = useState({boxes: 0,name:'',address:'',email:'',payment:null,info:'', location:'Cape town, south africa'})
-  const [newSub, setNewSub] = useState({sub:'weekly',boxes: 0,name:'',address:'',email:'',payment:null,info:'',location:'Cape town, south africa'})
+  const [newOrder, setNewOrder] = useState({boxes: 0,name:'',address:'',email:'',payment:'',info:'', location:'Cape town, south africa'})
+  const [newSub, setNewSub] = useState({sub:'weekly',boxes: 0,name:'',address:'',email:'',payment:'',info:'',location:'Cape town, south africa'})
   const router = useRouter()
   const redirect = () => router.push(activeUser ? "/send" : "/sign");
   useEffect(() => {
@@ -123,7 +123,7 @@ export default function Home() {
           setNewOrder({...newOrder, info:info})
           }}/>
          </div>}
-          <button disabled={newOrder.boxes == 0 || newOrder.payment == null  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={() => {
+          <button disabled={newOrder.boxes == 0 || newOrder.payment == ''  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={() => {
     const timestamp = Date.now();
     const date = new Date(timestamp);
     const year = date.getFullYear();
@@ -223,7 +223,7 @@ export default function Home() {
         value={newSub.info}
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
-          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
+          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==''||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>{
             const timestamp = Date.now();
             const date = new Date(timestamp);
             const year = date.getFullYear();
@@ -287,7 +287,7 @@ export default function Home() {
         value={newSub.info}
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
-          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==null||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
+          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==''||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
          </div>
                 </div>}
             </div>

@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }) => {
       sub: null,
       address: "",
       info: "",
-      payment: null,
-      subPayment: null,
-      subInfo:null,
+      payment: '',
+      subPayment: '',
+      subInfo:'',
       cart: {
         sub: {
           hair: 0,
