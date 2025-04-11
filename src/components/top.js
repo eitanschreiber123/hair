@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { useRef, useState, useEffect } from "react";
-const Top = ({image, first, second, whichLink}) => {
+const Top = ({image, first, second, whichLink, secondLink}) => {
   const [see, change] = useState('transparent')
+  const [behind, setBehind] = useState('transparent')
+  const [space, setSpace] = useState('50px')
   const [wwidth, setWidth] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [z, setZ] = useState(10)
@@ -14,8 +16,12 @@ const Top = ({image, first, second, whichLink}) => {
         window.pageYOffset
         if (window.pageYOffset > 490) {
           change('black')
+          setSpace(0)
+          setBehind('white')
         } else {
           change('transparent')
+          setSpace('50px')
+          setBehind('transparent')
         }
       }
       window.addEventListener('scroll', handleResize);
@@ -36,12 +42,12 @@ const Top = ({image, first, second, whichLink}) => {
     return <section style={{backgroundImage:`url(/${image}.png)`, backgroundRepeat:'no-repeat', backgroundPosition:'center',backgroundSize:'cover', display:'flex',flexDirection:'column', height:'95vh',marginBottom:'50px', alignItems:'center',justifyContent:'center',width:'100%'}}>
           {/* Sidebar (Hidden by Default) */}
         {wwidth > 820 ? (
-          <div className={styles.wr} style={{width:'100%',display:'flex',justifyContent:'space-between',position:'fixed',marginTop:'50px', padding:'0 20px',top:0,backgroundColor:see}}>
-          <Image src="/no_white.png" width={96} height={96}/>
+          <div className={styles.wr} style={{width:'100%',display:'flex',justifyContent:'space-between',position:'fixed',marginTop:space, padding:'0 20px',top:0,backgroundColor:see,alignItems:'center'}}>
+          <Image alt="top" src="/no_white.png" style={{borderRadius:'50px',backgroundColor:behind}} width={96} height={96}/>
           <div style={{display:'flex'}}>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/about">About us</Link>
             <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>whichLink()}>Barber Portal</p>
-            <Link style={{fontSize:'1.5em',color:'white'}} href="/employee">Employee Portal</Link>
+            <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>secondLink()}>Employee Portal</p>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/impact">Our impact</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/contact">Contact</Link>
@@ -85,7 +91,7 @@ const Top = ({image, first, second, whichLink}) => {
           <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/about">About us</Link>
             <p style={{fontSize:'1.5em',cursor:'pointer',margin:'20px 0'}} onClick={()=>whichLink()}>Barber Portal</p>
-            <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/employee">Employee Portal</Link>
+            <p style={{fontSize:'1.5em',cursor:'pointer',margin:'20px 0'}} onClick={()=>secondLink()}>Employee Portal</p>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/impact">Our impact</Link>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/contact">Contact</Link>

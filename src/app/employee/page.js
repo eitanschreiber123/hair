@@ -5,17 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/history';
 
 export default function Home() {
-  const { users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders } = useAuth();
+  const { users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, changeOrderStatus } = useAuth();
   const [location, setLocation] = useState(0);
   const [wwidth, setWidth] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [z, setZ] = useState(10)
-  const [orders, confirm] = useState([
-    { location: 'Cape town, South Africa', orders: [] },
-    { location: 'Nairobi, Kenya', orders: [] },
-    { location: 'Arusha, Tanzania', orders: [] },
-    { location: 'Dar es Salaam, Tanzania', orders: [] }
-  ]);
+  const [orders, confirm] = useState([]);
+  const [filters, setFilters] = useState([
+    {f:'pending', c:false},
+    {f:'confirmed', c:false},
+    {f:'sent', c:false},
+    {f:'input', c:true}
+  ])
+  const [userFilters, setUserFilters] = useState([])
 
   const router = useRouter();
 
@@ -28,7 +30,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (pickupOrders) {
+    if (pickupOrders && pickupOrders.length > 0) {
+      console.log(pickupOrders)
       confirm(pickupOrders);
     }
   }, []);
@@ -51,11 +54,30 @@ export default function Home() {
         {/* Sidebar (Hidden by Default) */}
         {wwidth > 680 ? (
           <section style={{ height: '100%', width: '25%', padding: '10px' }}>
-            {orders.map((o, ind) => (
-              <p key={ind} style={{ margin: '20px 0', cursor: 'pointer' }} onClick={() => setLocation(ind)}>
+            <div>{pickupOrders.map((o, ind) => (
+              <p key={ind} style={{ margin: '20px 0', cursor: 'pointer' }} onClick={() => 
+              {
+                setLocation(ind)
+              setFilters([
+                {f:'pending', c:false},
+                {f:'confirmed', c:false},
+                {f:'sent', c:false}
+              ])
+            }
+              }>
                 {o.location}
               </p>
-            ))}
+            ))}</div>
+            <div>
+                    {users.map(u => <div style={{display:'flex'}}>
+              <p>{u.name}</p>
+            <input
+        type="checkbox"
+        name={u.name}
+        checked={userFilters.includes(u.name)}
+        onChange={()=>setUserFilters(!userFilters.includes(u.name) ? userFilters.concat(u.name) : userFilters.filter(us => us !== u.name))}/>
+            </div>)}
+                  </div>
           </section>
         ) : (
           <>
@@ -90,11 +112,29 @@ export default function Home() {
                   }} 
                   onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside sidebar
                 >
-                  {orders.map((o, ind) => (
-                    <p key={ind} style={{ margin: '20px 0', cursor: 'pointer' }} onClick={() => { setLocation(ind); setSidebarOpen(false); }}>
+                  <div>{orders.map((o, ind) => (
+                    <p key={ind} style={{ margin: '20px 0', cursor: 'pointer' }} onClick={() => {
+                      setLocation(ind);
+                      setSidebarOpen(false);
+                      setFilters([
+                        {f:'pending', c:false},
+                        {f:'confirmed', c:false},
+                        {f:'sent', c:false}
+                      ])
+                      }}>
                       {o.location}
                     </p>
-                  ))}
+                  ))}</div>
+                  <div>
+                    {users.map(u => <div style={{display:'flex'}}>
+              <p>{u.name}</p>
+            <input
+        type="checkbox"
+        name={u.name}
+        checked={userFilters.includes(u.name)}
+        onChange={()=>setUserFilters(!userFilters.includes(u.name) ? userFilters.concat(u.name) : userFilters.filter(us => us !== u.name))}/>
+            </div>)}
+                  </div>
                 </div>
               </div>
             )}
@@ -102,14 +142,20 @@ export default function Home() {
         )}
 
         {/* Main Content */}
-        <section style={{ height: '100%', flex: 1 }}>
-          <h1>{orders[location].location}</h1>
-          {orders[location].orders.map((o, inner) => (
-            <div key={inner} onClick={() => confirm(orders.map((or, i) =>
-              i === location ? { location: or.location, orders: or.orders.map((ord, inn) =>
-                inn === inner ? { ...ord, status: 'input' } : ord
-              ) } : or
-            ))}>
+        {pickupOrders[location] && pickupOrders[location].location && <section style={{ height: '100%', flex: 1 }}>
+          <h1>{pickupOrders[location].location}</h1>
+          <div style={{display:'flex',width:'100%',justifyContent:'space-evenly'}}>
+            {filters.slice(0, 3).map((f, i) => <div style={{display:'flex'}}>
+              <p>{f.f}</p>
+            <input
+        type="checkbox"
+        name={f.f}
+        checked={f.c}
+        onChange={()=>setFilters(filters.map((fi, ind) => i == ind ? {f:f.f, c:!f.c} : fi))}      />
+            </div>)}
+          </div>
+          {pickupOrders.map(({location,orders})=>({location,orders: orders.filter(order => userFilters.length == 0 ? order : userFilters.includes(order.name))}))[location].orders.filter(f => filters.slice(0, 3).filter(f => f.c == false).length == 3 ? f : filters.filter(f => f.c == true).map(f => f.f).includes(f.status)).map((o, inner) => (
+            <div key={inner} onClick={() => changeOrderStatus(pickupOrders[location].location,o._id,'input')}>
               <p>name: {o.name}</p>
               <p>date: {o.date}</p>
               <p>status: {o.status}</p>
@@ -122,21 +168,13 @@ export default function Home() {
                   name="amount"
                   placeholder="amount"
                   value={o.amount}
-                  onChange={e => confirm(orders.map((or, i) =>
-                    i === location ? { location: or.location, orders: or.orders.map((ord, inn) =>
-                      inn === inner ? { ...ord, amount: e.target.value } : ord
-                    ) } : or
-                  ))}
-                  onBlur={() => confirm(orders.map((or, i) =>
-                    i === location ? { location: or.location, orders: or.orders.map((ord, inn) =>
-                      inn === inner ? { ...ord, status: 'confirmed' } : ord
-                    ) } : or
-                  ))}
+                  onChange={e => changeOrderStatus(pickupOrders[location].location,o._id,o.status,e.target.value)}
+                  onBlur={() => changeOrderStatus(pickupOrders[location].location,o._id,'confirmed',o.amount)}
                 />
               ) : null}
             </div>
           ))}
-        </section>
+        </section>}
       </section>
 
       {/* Footer */}

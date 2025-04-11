@@ -7,7 +7,7 @@ import {useAuth} from '../../context/history'
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, addItemToCart} = useAuth()
   const [cart, setCart] = useState({hair:0, liquid:0})
   const [price, setPrice] = useState({hair:null, liquid:null})
   const router = useRouter()
@@ -20,15 +20,17 @@ export default function Home() {
       }
     }
     useEffect(() => {
-      const storedItems = localStorage.getItem("cart");
-      setCart(JSON.parse(storedItems))
-    }, [])
+      if (activeUser) {
+        setCart(activeUser.cart.one);
+      }
+    }, []);
     useEffect(() => {
-      localStorage.setItem('cart', JSON.stringify(cart))
+      addItemToCart({ type: 'one', product: 'hair' }, cart.hair)
+      addItemToCart({ type: 'one', product: 'liquid' }, cart.liquid)
       setPrice({hair: cart.hair * .2, liquid: cart.liquid * 3.68})
     }, [cart]);
   return (
-      <main>
+      activeUser && <main>
         <Top image="hair" first="Cart"whichLink={()=>redirect()}/>
         <h1>hair
               <button onClick={()=>setCart(prev => ({...prev,hair: Math.max(0, prev.hair - 1)}))} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>

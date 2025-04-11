@@ -77,7 +77,7 @@ export default function Home() {
             </svg></Link></div>
       <div style={{alignSelf:'center', display:'flex',width:'100%',justifyContent:'space-evenly', marginBottom:'50px',flexWrap:'wrap'}}>
           <Link style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',margin:'10px'}} href="/shop">Shop</Link>
-          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em', border:'none',margin:'10px'}} onClick={()=>redirect()}>Send in hair</button>
+          <Link href={activeUser ? "/send" : "/sign"} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em', border:'none',margin:'10px'}}>Send in hair</Link>
           <Link style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',margin:'10px'}} href="https://invest.somoafrica.org/public/2659/CUTOFF%20RECYCLE%20LIMITED">Invest</Link>
         </div>
         <section style={{alignItems:'center',display:'flex',flexDirection:'column'}}>

@@ -6,7 +6,7 @@ import Top from '@/components/top';
 import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
-const locations = ['Cape town, south africa', 'Nairobi, kenya', 'Arusha, tanzania', 'Dar es salam, tanzania']
+const locations = ['Cape town, South africa', 'Nairobi, Kenya', 'Arusha, Tanzania', 'Dar es salam, Tanzania']
 
 export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders} = useAuth()
@@ -32,7 +32,7 @@ export default function Home() {
   })
   useEffect(() => {
     if (activeUser) {
-      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info, location:'Cape town, south africa'})
+      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info, location:'Cape town, south africa',user:activeUser._id})
     setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo, location: activeUser.sub?.location || 'Cape town, south africa'})
     setName(activeUser.name)
     setAddress(activeUser.address)
@@ -52,6 +52,11 @@ export default function Home() {
     setColumn1('list')
     setColumn2('first')
   }, [display, users])
+  useEffect(() => {
+    if (newOrder.payment !== '') {
+      setNewOrder({...newOrder, info:info})
+    }
+  }, [info])
   return (
       activeUser && <main style={{ display: 'flex',flexDirection: 'column',width:'100vw',alignItems:'center'}}>
         <Top image="people"first="Barbers"  whichLink={()=>redirect()}/>
@@ -63,7 +68,7 @@ export default function Home() {
           </div>
           <section>
           {display == 'order' && <div style={{marginBottom:'50px'}}>
-            {column1 == 'list' ? 
+            {column1 == 'list' && activeUser.orders.length ? 
             <div>
               {activeUser && activeUser.orders.map(o =><div>
                 <p>Date: {o.date}</p>
@@ -77,9 +82,9 @@ export default function Home() {
           <p>We'll send you boxes and 5 bags per box, send us back a box with 5 bags full of hair and we'll pay you 200$ per box</p>
             <h2>How many boxes do you want?</h2>
             <p>
-              <button onClick={()=>setNewOrder({boxes:Math.max(0, newOrder.boxes - 1),name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
+              <button onClick={()=>setNewOrder({boxes:Math.max(0, newOrder.boxes - 1),name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location,user:newOrder.user})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>-</button>
               <span>{newOrder.boxes}</span>
-              <button onClick={p=>setNewOrder({boxes:newOrder.boxes+1,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
+              <button onClick={p=>setNewOrder({boxes:newOrder.boxes+1,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:newOrder.location,user:newOrder.user})} style={{backgroundColor:'blue',color:'white',padding:'5px 22px',fontSize:'1.1em',borderRadius:'5px',margin:'0px 10px'}}>+</button>
               </p>
           <div>
             <p>Shipping Address</p>
@@ -92,7 +97,7 @@ export default function Home() {
           <div>
             <h2>Pickup location</h2>
             <div style={{display:'flex',flexWrap:'wrap'}}>{locations.map((l, ind) => <p onClick={p=>{
-              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
+              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l,user:newOrder.user})
               setSelected(ind)
               }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
           </div>
@@ -118,10 +123,7 @@ export default function Home() {
         name="info"
         placeholder={payment == 'paypal' || payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'}
         value={info}
-        onChange={e => {
-          setInfo(e.target.value)
-          setNewOrder({...newOrder, info:info})
-          }}/>
+        onChange={e => setInfo(e.target.value)}/>
          </div>}
           <button disabled={newOrder.boxes == 0 || newOrder.payment == ''  || newOrder.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={() => {
     const timestamp = Date.now();
@@ -268,7 +270,7 @@ export default function Home() {
           <div>
             <h2>Pickup location</h2>
             <div style={{display:'flex'}}>{locations.map((l, ind) => <p onClick={p=>{
-              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l})
+              setNewOrder({boxes:newOrder.boxes,name:newOrder.name,address:address,email:newOrder.email,payment:newOrder.payment,info:newOrder.info,location:l,user:newOrder.user})
               setSelected(ind)
               }}  style={{margin:'10px',padding:'10px',borderRadius:'50px',border:ind == selected ? '1px solid black' : 'none'}}>{l}</p>)}</div>
           </div>

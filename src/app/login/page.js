@@ -13,7 +13,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    console.log(users)
     const user = users.find(user => user.email === email && user.password === password);
     if (!user) {
       throw new Error("Invalid email or password")

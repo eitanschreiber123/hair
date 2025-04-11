@@ -46,6 +46,7 @@ export default function Home() {
       
       <button onClick={handleSignUp}>Sign Up</button>
     </div>
+    <p>Already have an account <Link href="/login">Login</Link></p>
       </main>
     </div>
   );

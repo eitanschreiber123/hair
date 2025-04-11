@@ -7,25 +7,26 @@ const AuthContext = createContext({});
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-  const [pickupOrders, setPickupOrders] = useState([
-    {location: 'Cape town, south africa', orders:[]},
-    {location: 'Nairobi, kenya', orders:[]},
-    {location: 'Arusha, tanzania', orders:[]},
-    {location: 'Dar es salam, tanzania', orders:[]}
-  ])
+  const [pickupOrders, setPickupOrders] = useState([])
   const [activeUser, setActiveUser] = useState(null);
 
   // Load from localStorage on mount
   useEffect(() => {
-    const storedUsers = localStorage.getItem("users");
-    const storedActiveUser = localStorage.getItem("activeUser");
-
-    if (storedUsers) setUsers(JSON.parse(storedUsers));
-    if (storedActiveUser) setActiveUser(JSON.parse(storedActiveUser));
-
-    const storedPickupOrders = localStorage.getItem("pickupOrders");
-    if (storedPickupOrders) setPickupOrders(JSON.parse(storedPickupOrders));
-  }, []);
+    const newData = async () => {
+      const data = await fetch('http://localhost:3000/api/data')
+  const users = await data.json()
+  setUsers(users)
+    }
+    newData()
+  }, [])
+  useEffect(() => {
+    const newData = async () => {
+      const data = await fetch('http://localhost:3000/api/pickup')
+  const users = await data.json()
+  setPickupOrders(users)
+    }
+    newData()
+  }, [])
 
   // Save to localStorage on users or activeUser change
   useEffect(() => {
@@ -35,83 +36,222 @@ export const AuthProvider = ({ children }) => {
   }, [users, activeUser, pickupOrders]);
 
   // Sign up a new user
-  const signUp = (name, email, password) => {
-    const userExists = users.find((user) => user.email === email);
-    if (userExists) throw new Error("User already exists");
-
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-      orders: [],
-      sub: null,
-      address: "",
-      info: "",
-      payment: '',
-      subPayment: '',
-      subInfo:'',
-      cart: {
-        sub: {
-          hair: 0,
-          liquid: 0
-        },
-        one: {
-          hair: 0,
-          liquid: 0
+  const signUp = async (name, email, password) => {
+    try {
+      const userExists = users.find((user) => user.email === email);
+      if (userExists) throw new Error("User already exists");
+  
+      const newUser = {
+        name,
+        email,
+        password,
+        orders: [],
+        sub: null,
+        address: "",
+        info: "",
+        payment: '',
+        subPayment: '',
+        subInfo: '',
+        cart: {
+          sub: {
+            weekly: { hair: 0, liquid: 0 },
+            monthly: { hair: 0, liquid: 0 }
+          },
+          one: {
+            hair: 0,
+            liquid: 0
+          }
         }
-      },
-    };
-
-    const updatedUsers = [...users, newUser];
-    setUsers(updatedUsers);
-    setActiveUser(newUser);
+      };
+  
+      const res = await fetch("/api/data", {
+        method: "POST",
+        body: JSON.stringify(newUser),
+      });
+  
+      if (!res.ok) throw new Error("Failed to register user");
+  
+      const savedUser = await res.json();
+      setUsers([...users, savedUser]);
+      setActiveUser(savedUser);
+    } catch (err) {
+      console.error("Signup Error:", err);
+      throw err;
+    }
   };
-
+  
   // Login an existing user
-  const login = (email, password) => {
-    const user = users.find((user) => user.email === email && user.password === password);
+  const login = async (email, password) => {
+  try {
+    const user = users.find((u) => u.email === email && u.password === password);
     if (!user) throw new Error("Invalid email or password");
 
+    // You might call an actual auth endpoint here in a real app
     setActiveUser(user);
-  };
+
+    // Update active user in backend too (if needed)
+    await fetch("/api/active", {
+      method: "PUT",
+      body: JSON.stringify({ user }),
+    });
+  } catch (err) {
+    console.error("Login Error:", err);
+    throw err;
+  }
+};
 
   // Logout
-  const logout = () => {
-    setActiveUser(null);
+  const logout = async () => {
+    try {
+      setActiveUser(null);
+      await fetch("/api/active", {
+        method: "PUT",
+        body: JSON.stringify({ user: null }),
+      });
+    } catch (err) {
+      console.error("Logout Error:", err);
+    }
   };
 
   // Update active user’s properties
-  const updateUser = (updates) => {
-    if (!activeUser) return;
+  const updateUser = async (updates) => {
+  if (!activeUser) return;
 
+  try {
     const updatedUser = { ...activeUser, ...updates };
-    setActiveUser(updatedUser);
+
+    const res = await fetch("/api/data", {
+      method: "PUT",
+      body: JSON.stringify(updatedUser),
+    });
+
+    if (!res.ok) throw new Error("Failed to update user");
+
+    const savedUser = await res.json();
+    setActiveUser(savedUser);
 
     const updatedUsers = users.map((user) =>
-      user.email === activeUser.email ? updatedUser : user
+      user._id === savedUser._id ? savedUser : user
     );
     setUsers(updatedUsers);
-  };
+  } catch (err) {
+    console.error("Update User Error:", err);
+  }
+};
 
-  const addOrder = (order) => {
-    if (!activeUser) return;
+const addOrder = async (order) => {
+  if (!activeUser) return;
+  const updatedOrders = [...(activeUser.orders || []), order];
+  await updateUser({ orders: updatedOrders });
+  const res = await fetch("/api/order", {
+    method: "POST",
+    body: JSON.stringify(order),
+  });
+  if (!res.ok) throw new Error("Failed to register user");
+};
 
-    const updatedOrders = [...activeUser.orders, order];
-    updateUser({ orders: updatedOrders });
-  };
+const addPickupOrder = async (location, order) => {
+  try {
+    const res = await fetch("http://localhost:3000/api/pickup", {
+      method: "PUT",
+      body: JSON.stringify({ location, order }),
+    });
 
-  const addPickupOrder = (location, order) => {
-    setPickupOrders((prevOrders) =>
-      prevOrders.map((pickup) =>
+    if (!res.ok) throw new Error("Failed to add pickup order");
+
+    const updatedPickupOrder = await res.json();
+
+    setPickupOrders((prev) =>
+      prev.map((pickup) =>
         pickup.location.toLowerCase() === location.toLowerCase()
-          ? { ...pickup, orders: [...pickup.orders, order] }
+          ? updatedPickupOrder
           : pickup
       )
     );
-  };
+  } catch (err) {
+    console.error("Add Pickup Order Error:", err);
+  }
+};
+
+const addItemToCart = async (item, quantity) => {
+  if (!activeUser || !item || typeof quantity !== 'number') return;
+
+  // Deep clone to avoid state mutation
+  const updatedCart = JSON.parse(JSON.stringify(activeUser.cart || {
+    sub: { weekly: { hair: 0, liquid: 0 }, monthly: { hair: 0, liquid: 0 } },
+    one: { hair: 0, liquid: 0 }
+  }));
+
+  const { type, plan, product } = item;
+
+  // Validate structure
+  if (!['sub', 'one'].includes(type)) {
+    console.error("Invalid cart type");
+    return;
+  }
+
+  if (type === 'sub') {
+    if (!['weekly', 'monthly'].includes(plan)) {
+      console.error("Invalid sub plan");
+      return;
+    }
+    if (!['hair', 'liquid'].includes(product)) {
+      console.error("Invalid product type");
+      return;
+    }
+
+    updatedCart.sub[plan][product] = (updatedCart.sub[plan][product] || 0) + quantity;
+  } else if (type === 'one') {
+    if (!['hair', 'liquid'].includes(product)) {
+      console.error("Invalid product type");
+      return;
+    }
+    updatedCart.one[product] = (updatedCart.one[product] || 0) + quantity;
+  }
+
+  // Save changes to backend
+  await updateUser({ cart: updatedCart });
+};
+
+const changeOrderStatus = async (location, orderId, status, amount = undefined) => {
+  try {
+    if (!location || !orderId || !status) {
+      throw new Error("Missing location, orderId, or status");
+    }
+
+    const payload = { location, orderId, status };
+    if (amount !== undefined) {
+      payload.amount = amount;
+    }
+
+    const res = await fetch("/api/pickup", {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to update order status");
+    }
+
+    const updatedPickupOrder = await res.json();
+
+    // Replace the updated pickupOrder in the state
+    setPickupOrders((prevOrders) =>
+      prevOrders.map((po) =>
+        po.location.toLowerCase() === location.toLowerCase() ? updatedPickupOrder : po
+      )
+    );
+  } catch (err) {
+    console.error("Change Order Status Error:", err);
+  }
+};
+
+
+
   
   return (
-    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders }}>
+    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, addItemToCart, changeOrderStatus}}>
       {children}
     </AuthContext.Provider>
   );
