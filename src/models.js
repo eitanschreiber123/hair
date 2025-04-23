@@ -15,19 +15,9 @@ const BarberInfoTypeSchema = new mongoose.Schema({address: String, info: String,
 const CustomerSubTypeSchema = new mongoose.Schema({sub:String, price: Number, items: CartItemTypeSchema})
 const CustomerDataTypeSchema = new mongoose.Schema({cart: CartTypeSchema, history: [], sub: CustomerSubTypeSchema, info: CustomerInfoTypeSchema})
 const BarberDataTypeSchema = new mongoose.Schema({orders: [], info:BarberInfoTypeSchema}, { strict: false })
-const UserTypeSchema = new mongoose.Schema({name: String,
-    email: String,
-    password: String,
-    address: String,
-    orders:[],
-    info: String,
-    payment: String,
-    subPayment: String,
-    subInfo:String,
-    cart: CartTypeSchema,
-    customerData: CustomerDataTypeSchema, barberData:BarberDataTypeSchema}, { strict: false })
-    const ActiveUserTypeSchema = new mongoose.Schema({ user: UserTypeSchema })
-    const EmployeeTypeSchema = new mongoose.Schema({name: String,email: String,password: String})
+const UserTypeSchema = new mongoose.Schema({name: String,email: String,password: String,customerData: CustomerDataTypeSchema, barberData:BarberDataTypeSchema}, { strict: false })
+const ActiveUserTypeSchema = new mongoose.Schema({ user: UserTypeSchema })
+const EmployeeTypeSchema = new mongoose.Schema({name: String,email: String,password: String})
 
 export const ActiveUserType = mongoose.models.ActiveUserType || mongoose.model("ActiveUserType", ActiveUserTypeSchema, "activeusertypes");
 export const CartItemType = mongoose.models.CartItemType || mongoose.model("CartItemType", CartItemTypeSchema, "cartitemtypes");
@@ -40,3 +30,9 @@ export const OtherOrderType = mongoose.models.OtherOrderType || mongoose.model("
 export const UserType = mongoose.models.UserType || mongoose.model("UserType", UserTypeSchema, "usertypes");
 export const EmployeeType = mongoose.models.EmployeeType || mongoose.model("EmployeeType", EmployeeTypeSchema, "employeetypes");
 export const HistoryType = mongoose.models.HistoryType || mongoose.model("HistoryType", HistoryTypeSchema, "historytypes");
+export const CustomerPaymentType = mongoose.models.CustomerPaymentType || mongoose.model("CustomerPaymentType", CustomerPaymentTypeSchema, "customerpaymenttypes")
+export const CustomerInfoType = mongoose.models.CustomerInfoType || mongoose.model("CustomerInfoType", CustomerInfoTypeSchema, "customerinfotypes")
+export const BarberInfoType = mongoose.models.BarberInfoType || mongoose.model("BarberInfoType", BarberInfoTypeSchema, "barberinfotypes")
+export const CustomerSubType = mongoose.models.CustomerSubType || mongoose.model("CustomerSubType", CustomerSubTypeSchema, "customersubtypes")
+export const CustomerDataType = mongoose.models.CustomerDataType || mongoose.model("CustomerDataType", CustomerDataTypeSchema, "customerdatatypes")
+export const BarberDataType = mongoose.models.BarberDataType || mongoose.model("BarberDataType", BarberDataTypeSchema, "barberdatatypes")
