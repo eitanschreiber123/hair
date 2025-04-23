@@ -8,6 +8,11 @@ const OrderTypeSchema = new mongoose.Schema({ date:String,boxes: Number,name:Str
 const OtherOrderTypeSchema = new mongoose.Schema({name: String, date: String, status: String})
 const PickupOrderTypeSchema = new mongoose.Schema({ location: String, orders:[]}, { strict: false });
 const SubTypeSchema = new mongoose.Schema({ sub:String,boxes: Number,name:String,address:String,email:String,payment:String,info:String,location:String})
+const HistoryTypeSchema = new mongoose.Schema({price: Number, items: CartItemTypeSchema, date: String})
+const CustomerInfoTypeSchema = new mongoose.Schema({address: String, payment: {cardName:String, cardNumber: String, expiryDate: String, cvv: Number}})
+const BarberInfoTypeSchema = new mongoose.Schema({address: String, info: String,payment: String,subPayment: String,subInfo:String})
+const CustomerDataTypeSchema = new mongoose.Schema({cart: CartTypeSchema, history: [], sub: String, info: CustomerInfoTypeSchema})
+const BarberDataTypeSchema = new mongoose.Schema({orders: [], info:BarberInfoTypeSchema}, { strict: false })
 const UserTypeSchema = new mongoose.Schema({name: String,
     email: String,
     password: String,
@@ -17,8 +22,10 @@ const UserTypeSchema = new mongoose.Schema({name: String,
     payment: String,
     subPayment: String,
     subInfo:String,
-    cart: CartTypeSchema}, { strict: false })
+    cart: CartTypeSchema,
+    customerData: CustomerDataTypeSchema, barberData:BarberDataTypeSchema}, { strict: false })
     const ActiveUserTypeSchema = new mongoose.Schema({ user: UserTypeSchema })
+    const EmployeeTypeSchema = new mongoose.Schema({name: String,email: String,password: String})
 
 export const ActiveUserType = mongoose.models.ActiveUserType || mongoose.model("ActiveUserType", ActiveUserTypeSchema, "activeusertypes");
 export const CartItemType = mongoose.models.CartItemType || mongoose.model("CartItemType", CartItemTypeSchema, "cartitemtypes");
@@ -29,3 +36,5 @@ export const PickupOrderType = mongoose.models.PickupOrderType || mongoose.model
 export const SubType = mongoose.models.SubType || mongoose.model("SubType", SubTypeSchema, "subtypes");
 export const OtherOrderType = mongoose.models.OtherOrderType || mongoose.model("OtherOrderType", OtherOrderTypeSchema, "otherordertypes")
 export const UserType = mongoose.models.UserType || mongoose.model("UserType", UserTypeSchema, "usertypes");
+export const EmployeeType = mongoose.models.EmployeeType || mongoose.model("EmployeeType", EmployeeTypeSchema, "employeetypes");
+export const HistoryType = mongoose.models.HistoryType || mongoose.model("HistoryType", HistoryTypeSchema, "historytypes");
