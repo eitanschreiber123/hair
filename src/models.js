@@ -9,9 +9,11 @@ const OtherOrderTypeSchema = new mongoose.Schema({name: String, date: String, st
 const PickupOrderTypeSchema = new mongoose.Schema({ location: String, orders:[]}, { strict: false });
 const SubTypeSchema = new mongoose.Schema({ sub:String,boxes: Number,name:String,address:String,email:String,payment:String,info:String,location:String})
 const HistoryTypeSchema = new mongoose.Schema({price: Number, items: CartItemTypeSchema, date: String})
-const CustomerInfoTypeSchema = new mongoose.Schema({address: String, payment: {cardName:String, cardNumber: String, expiryDate: String, cvv: Number}})
+const CustomerPaymentTypeSchema = new mongoose.Schema({cardName:String, cardNumber: String, expiryDate: String, cvv: Number})
+const CustomerInfoTypeSchema = new mongoose.Schema({address: String, payment: CustomerPaymentTypeSchema})
 const BarberInfoTypeSchema = new mongoose.Schema({address: String, info: String,payment: String,subPayment: String,subInfo:String})
-const CustomerDataTypeSchema = new mongoose.Schema({cart: CartTypeSchema, history: [], sub: String, info: CustomerInfoTypeSchema})
+const CustomerSubTypeSchema = new mongoose.Schema({sub:String, price: Number, items: CartItemTypeSchema})
+const CustomerDataTypeSchema = new mongoose.Schema({cart: CartTypeSchema, history: [], sub: CustomerSubTypeSchema, info: CustomerInfoTypeSchema})
 const BarberDataTypeSchema = new mongoose.Schema({orders: [], info:BarberInfoTypeSchema}, { strict: false })
 const UserTypeSchema = new mongoose.Schema({name: String,
     email: String,
