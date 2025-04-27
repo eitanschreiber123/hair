@@ -21,7 +21,7 @@ export default function Home() {
     }
     useEffect(() => {
       if (activeUser) {
-        setCart(activeUser.cart.one);
+        setCart(activeUser.customerData.cart.one);
       }
     }, []);
     useEffect(() => {

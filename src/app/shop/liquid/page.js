@@ -14,7 +14,7 @@ export default function Home() {
   // Load cart from localStorage on mount
   useEffect(() => {
     if (activeUser) {
-      setCart(activeUser.cart);
+      setCart(activeUser.customerData.cart);
     }
   }, []);
 

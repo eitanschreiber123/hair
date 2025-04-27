@@ -29,30 +29,3 @@ export async function POST(req) {
       return Response.json({ error: "Failed to create user", details: error.message }, { status: 500 });
     }
   }
-  
-  // 🔁 PUT: Update an existing user by _id
-  export async function PUT(req) {
-    try {
-      await connectDB();
-      const body = await req.json();
-      const { _id, ...updateFields } = body;
-  
-      if (!_id) {
-        return Response.json({ error: "Missing _id for update" }, { status: 400 });
-      }
-  
-      const updatedUser = await UserType.findByIdAndUpdate(_id, updateFields, {
-        new: true,
-        runValidators: true
-      });
-  
-      if (!updatedUser) {
-        return Response.json({ error: "User not found" }, { status: 404 });
-      }
-  
-      return Response.json(updatedUser, { status: 200 });
-    } catch (error) {
-      console.error("Error updating user:", error);
-      return Response.json({ error: "Failed to update user", details: error.message }, { status: 500 });
-    }
-  }

@@ -9,7 +9,7 @@ import {useAuth} from '../../context/history'
 const locations = ['Cape town, South africa', 'Nairobi, Kenya', 'Arusha, Tanzania', 'Dar es salam, Tanzania']
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders} = useAuth()
   const [selected, setSelected] = useState(0)
   const [display, setDisplay] = useState('order')
   const [column1, setColumn1] = useState('list')
@@ -32,19 +32,23 @@ export default function Home() {
   })
   useEffect(() => {
     if (activeUser) {
-      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.payment,info:activeUser.info, location:'Cape town, south africa',user:activeUser._id})
-    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,payment:activeUser.subPayment,info:activeUser.subInfo, location: activeUser.sub?.location || 'Cape town, south africa'})
+      setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,
+        payment:activeUser.barberData.barberInfo.payment,info:activeUser.barberData.barberInfo.info, location:'Cape town, south africa',user:activeUser._id})
+    setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,
+      payment:activeUser.barberData.barberInfo.subPayment,info:activeUser.barberData.barberInfo.subInfo, location: activeUser.barberData.sub?.location || 'Cape town, south africa'})
     setName(activeUser.name)
-    setAddress(activeUser.address)
-    setInfo(activeUser.info)
-    setPayment(activeUser.payment)
-    setSubInfo(activeUser.subInfo)
-    setSubPayment(activeUser.subPayment)
+
+    setAddress(activeUser.barberData.barberInfo.address)
+    setInfo(activeUser.barberData.barberInfo.info)
+    setPayment(activeUser.barberData.barberInfo.payment)
+    setSubInfo(activeUser.barberData.barberInfo.subInfo)
+    setSubPayment(activeUser.barberData.barberInfo.subPayment)
+    
     setEmail(activeUser.email)
     }
   },[])
   useEffect(() => {
-    if (activeUser && activeUser.sub) {
+    if (activeUser && activeUser.barberData.sub) {
       setColumn2('first')
     }
   }, [users])
@@ -68,9 +72,9 @@ export default function Home() {
           </div>
           <section>
           {display == 'order' && <div style={{marginBottom:'50px'}}>
-            {column1 == 'list' && activeUser.orders.length ? 
+            {column1 == 'list' && activeUser.barberData.orders.length ? 
             <div>
-              {activeUser && activeUser.orders.map(o =><div>
+              {activeUser && activeUser.barberData.orders.map(o =><div>
                 <p>Date: {o.date}</p>
                 <p>boxes: {o.boxes}</p>
                 <p>location: {o.location}</p>
@@ -165,19 +169,19 @@ export default function Home() {
           </div>}
           {
             display == 'sub' && <div style={{marginBottom:'50px'}}>
-              {activeUser.sub ? <div>
+              {activeUser.barberData.sub ? <div>
                 {column2 == 'first' ? <div>
                   <div>
-                <h2>Current subscription: {activeUser.sub.sub}</h2>
-                <p>{activeUser.sub.boxes} boxes</p>
-                <p>location: {activeUser.sub.location}</p>
+                <h2>Current subscription: {activeUser.barberData.sub.sub}</h2>
+                <p>{activeUser.barberData.sub.boxes} boxes</p>
+                <p>location: {activeUser.barberData.sub.location}</p>
                 <h2>payment info</h2>
-                <p>payment: {activeUser.sub.payment}</p>
-                <p>{activeUser.sub.payment == 'paypal' || activeUser.sub.payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'} {activeUser.sub.info}</p>
+                <p>payment: {activeUser.barberData.sub.payment}</p>
+                <p>{activeUser.barberData.sub.payment == 'paypal' || activeUser.barberData.sub.payment == 'zelle' ? 'Email' : 'Bitcoin wallet address'} {activeUser.barberData.sub.info}</p>
                 <div>
                   <button onClick={()=>setColumn2('change')} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Change</button>
                   <button onClick={()=>{
-                    updateUser({sub:null})
+                    updateBarberData({sub:null})
                     }} style={{backgroundColor:'red',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Cancel</button>
                 </div>
               </div>
@@ -241,7 +245,7 @@ export default function Home() {
               status: 'pending',
               amount: '',
             });
-            updateUser({sub:newSub})}}>Submit</button>
+            updateBarberData({sub:newSub})}}>Submit</button>
          </div>
                 </div>
                   </div>}
@@ -289,7 +293,7 @@ export default function Home() {
         value={newSub.info}
         onChange={e => setNewSub({sub:newSub.sub,boxes:newSub.boxes,name:name,address:address,email:email,payment:newSub.payment,info:e.target.value,location:newSub.location})}/>
          </div>}
-          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==''||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({sub:newSub})}>Submit</button>
+          <button disabled={newSub.boxes==0||newSub.name==''||newSub.email==''||newSub.payment==''||newSub.info == '' || address == ''} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateBarberData({sub:newSub})}>Submit</button>
          </div>
                 </div>}
             </div>
@@ -305,14 +309,6 @@ export default function Home() {
         onChange={e => setName(e.target.value)}/>
           </div>
           <div>
-            <p>Change Address</p>
-            <input type="text"
-        name="address"
-        placeholder="address"
-        value={address}
-        onChange={e => setAddress(e.target.value)}/>
-          </div>
-          <div>
             <p>Change Email</p>
             <input type="email"
         name="email"
@@ -320,7 +316,7 @@ export default function Home() {
         value={email}
         onChange={e => setEmail(e.target.value)}/>
           </div>
-          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({name, email, address, info})}>Submit</button>
+          <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>updateUser({name, email})}>Submit</button>
             </div>}
         </section>
       </main>

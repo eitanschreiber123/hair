@@ -45,22 +45,45 @@ export const AuthProvider = ({ children }) => {
         name,
         email,
         password,
-        orders: [],
+        customerData: {
+          cart: {
+            sub: {
+              weekly: { hair: 0, liquid: 0 },
+              monthly: { hair: 0, liquid: 0 }
+            },
+            one: {
+              hair: 0,
+              liquid: 0
+            }
+          }, 
+          history: [], 
+          sub: {
+            sub:"", 
+            price: 0, 
+            items: {
+              hair: 0, 
+              liquid: 0
+            }}, 
+          info: {
+            address: "", 
+            payment: {
+              cardName:"", 
+              cardNumber: "", 
+              expiryDate: "", 
+              cvv: ""
+            }
+          }
+        },
+        barberData: {
+          orders: [],
         sub: null,
-        address: "",
+        barberInfo: {
+          address: "",
         info: "",
         payment: '',
         subPayment: '',
         subInfo: '',
-        cart: {
-          sub: {
-            weekly: { hair: 0, liquid: 0 },
-            monthly: { hair: 0, liquid: 0 }
-          },
-          one: {
-            hair: 0,
-            liquid: 0
-          }
+        }
         }
       };
   
@@ -113,35 +136,102 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update active user’s properties
   const updateUser = async (updates) => {
-  if (!activeUser) return;
-
-  try {
-    const updatedUser = { ...activeUser, ...updates };
-
-    const res = await fetch("/api/data", {
-      method: "PUT",
-      body: JSON.stringify(updatedUser),
-    });
-
-    if (!res.ok) throw new Error("Failed to update user");
-
-    const savedUser = await res.json();
-    setActiveUser(savedUser);
-
-    const updatedUsers = users.map((user) =>
-      user._id === savedUser._id ? savedUser : user
-    );
-    setUsers(updatedUsers);
-  } catch (err) {
-    console.error("Update User Error:", err);
-  }
-};
-
+    if (!activeUser) return;
+  
+    try {
+      const updatedUser = {
+        ...activeUser,
+        ...updates,
+      };
+  
+      const { name, email, password } = updatedUser;
+  
+      const res = await fetch("/api/data", {
+        method: "PUT",
+        body: JSON.stringify({ _id: activeUser._id, name, email, password }),
+      });
+  
+      if (!res.ok) throw new Error("Failed to update user info");
+  
+      const savedUser = await res.json();
+      setActiveUser(savedUser);
+  
+      const updatedUsers = users.map((user) =>
+        user._id === savedUser._id ? savedUser : user
+      );
+      setUsers(updatedUsers);
+    } catch (err) {
+      console.error("Update User Info Error:", err);
+    }
+  };
+  
+  // Update active user’s properties
+  const updateCustomerData = async (customerUpdates) => {
+    if (!activeUser) return;
+  
+    try {
+      const updatedUser = {
+        ...activeUser,
+        customerData: {
+          ...activeUser.customerData,
+          ...customerUpdates
+        },
+      };
+  
+      const res = await fetch("/api/customer", {
+        method: "PUT",
+        body: JSON.stringify({ _id: activeUser._id, customerData: updatedUser.customerData }),
+      });
+  
+      if (!res.ok) throw new Error("Failed to update customer data");
+  
+      const savedUser = await res.json();
+      setActiveUser(savedUser);
+  
+      const updatedUsers = users.map((user) =>
+        user._id === savedUser._id ? savedUser : user
+      );
+      setUsers(updatedUsers);
+    } catch (err) {
+      console.error("Update Customer Data Error:", err);
+    }
+  };
+  
+  const updateBarberData = async (barberUpdates) => {
+    if (!activeUser) return;
+  
+    try {
+      const updatedUser = {
+        ...activeUser,
+        barberData: {
+          ...activeUser.barberData,
+          ...barberUpdates
+        },
+      };
+  
+      const res = await fetch("/api/barber", {
+        method: "PUT",
+        body: JSON.stringify({ _id: activeUser._id, barberData: updatedUser.barberData }),
+      });
+  
+      if (!res.ok) throw new Error("Failed to update barber data");
+  
+      const savedUser = await res.json();
+      setActiveUser(savedUser);
+  
+      const updatedUsers = users.map((user) =>
+        user._id === savedUser._id ? savedUser : user
+      );
+      setUsers(updatedUsers);
+    } catch (err) {
+      console.error("Update Barber Data Error:", err);
+    }
+  };
+  
 const addOrder = async (order) => {
   if (!activeUser) return;
-  const updatedOrders = [...(activeUser.orders || []), order];
+  const updatedOrders = [...(activeUser.barberData.orders || []), order];
   await updateUser({ orders: updatedOrders });
   const res = await fetch("/api/order", {
     method: "POST",
@@ -177,7 +267,7 @@ const addItemToCart = async (item, quantity) => {
   if (!activeUser || !item || typeof quantity !== 'number') return;
 
   // Deep clone to avoid state mutation
-  const updatedCart = JSON.parse(JSON.stringify(activeUser.cart || {
+  const updatedCart = JSON.parse(JSON.stringify(activeUser.customerData.cart || {
     sub: { weekly: { hair: 0, liquid: 0 }, monthly: { hair: 0, liquid: 0 } },
     one: { hair: 0, liquid: 0 }
   }));
@@ -251,7 +341,7 @@ const changeOrderStatus = async (location, orderId, status, amount = undefined) 
 
   
   return (
-    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, addItemToCart, changeOrderStatus}}>
+    <AuthContext.Provider value={{ users, activeUser, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders, addItemToCart, changeOrderStatus}}>
       {children}
     </AuthContext.Provider>
   );
