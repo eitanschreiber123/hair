@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
     const router = useRouter()
       const redirect = () => {
         if (!activeUser) {
@@ -18,7 +18,7 @@ export default function Home() {
       }
   return (
       <main style={{ display: 'flex',flexDirection: 'column',width:'100vw',alignItems:'center',height:'100vh'}}>
-        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture"  whichLink={()=>redirect()}/>
+        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <h1>Our impact</h1>
         <h1>Coming soon</h1>
         <footer style={{width:'100%'}}>

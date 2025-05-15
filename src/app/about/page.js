@@ -7,7 +7,7 @@ import {useAuth} from '../../context/history'
 import styles from "./page.module.css";
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
     const router = useRouter()
       const redirect = () => {
         if (!activeUser) {
@@ -19,7 +19,7 @@ export default function Home() {
       }
   return (
       <main style={{display:'flex',flexDirection:'column',textAlign:'center'}}>
-        <Top image="people"first="About"  whichLink={()=>redirect()}/>
+        <Top image="people"first="About"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <h1>About</h1>
           <section style={{display:'flex',flexDirection:'column',textAlign:'center'}}>
             <h1>Our story</h1>

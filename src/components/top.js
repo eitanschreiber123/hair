@@ -2,14 +2,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { useRouter } from 'next/navigation'
 import { useRef, useState, useEffect } from "react";
-const Top = ({image, first, second, whichLink, secondLink}) => {
+const Top = ({image, first, second, whichLink, secondLink, amount}) => {
   const [see, change] = useState('transparent')
   const [behind, setBehind] = useState('transparent')
   const [space, setSpace] = useState('50px')
   const [wwidth, setWidth] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [z, setZ] = useState(10)
+  const router = useRouter()
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handleResize = () => {
@@ -51,6 +53,14 @@ const Top = ({image, first, second, whichLink, secondLink}) => {
             <Link style={{fontSize:'1.5em',color:'white'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/impact">Our impact</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/contact">Contact</Link>
+            <div style={{display:'flex',alignItems:'center'}} onClick={()=>router.push("/cart")}>
+              <svg width="24"height="24"viewBox="0 0 24 24"fill="none"stroke="white"strokeWidth="2"strokeLinecap="round"strokeLinejoin="round">
+                <circle cx="8" cy="21" r="1"></circle>
+                <circle cx="19" cy="21" r="1"></circle>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              </svg>
+              <span style={{borderRadius:'50px',backgroundColor:'white',color:'black',padding:'2px'}}>{amount}</span>
+            </div>
           </div>
         </div>
         ) : (
@@ -95,6 +105,14 @@ const Top = ({image, first, second, whichLink, secondLink}) => {
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/impact">Our impact</Link>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/contact">Contact</Link>
+            <div style={{display:'flex',alignItems:'center'}} onClick={()=>router.push("/cart")}>
+              <svg width="24"height="24"viewBox="0 0 24 24"fill="none"stroke="white"strokeWidth="2"strokeLinecap="round"strokeLinejoin="round">
+                <circle cx="8" cy="21" r="1"></circle>
+                <circle cx="19" cy="21" r="1"></circle>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              </svg>
+              <span style={{borderRadius:'50px',backgroundColor:'white',color:'black',padding:'2px'}}>{amount}</span>
+            </div>
           </div>
         </div>
                 </div>

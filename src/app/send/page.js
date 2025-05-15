@@ -9,7 +9,7 @@ import {useAuth} from '../../context/history'
 const locations = ['Cape town, South africa', 'Nairobi, Kenya', 'Arusha, Tanzania', 'Dar es salam, Tanzania']
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders} = useAuth()
+  const {users, activeUser, cart, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders} = useAuth()
   const [selected, setSelected] = useState(0)
   const [display, setDisplay] = useState('order')
   const [column1, setColumn1] = useState('list')
@@ -33,16 +33,16 @@ export default function Home() {
   useEffect(() => {
     if (activeUser) {
       setNewOrder({boxes: 0,name:activeUser.name,address:address,email:activeUser.email,
-        payment:activeUser.barberData.barberInfo.payment,info:activeUser.barberData.barberInfo.info, location:'Cape town, south africa',user:activeUser._id})
+        payment:activeUser.barberData.info.payment,info:activeUser.barberData.info.info, location:'Cape town, south africa',user:activeUser._id})
     setNewSub({sub:'weekly',boxes: 0,name:activeUser.name,address:address,email:activeUser.email,
-      payment:activeUser.barberData.barberInfo.subPayment,info:activeUser.barberData.barberInfo.subInfo, location: activeUser.barberData.sub?.location || 'Cape town, south africa'})
+      payment:activeUser.barberData.info.subPayment,info:activeUser.barberData.info.subInfo, location: activeUser.barberData.sub?.location || 'Cape town, south africa'})
     setName(activeUser.name)
 
-    setAddress(activeUser.barberData.barberInfo.address)
-    setInfo(activeUser.barberData.barberInfo.info)
-    setPayment(activeUser.barberData.barberInfo.payment)
-    setSubInfo(activeUser.barberData.barberInfo.subInfo)
-    setSubPayment(activeUser.barberData.barberInfo.subPayment)
+    setAddress(activeUser.barberData.info.address)
+    setInfo(activeUser.barberData.info.info)
+    setPayment(activeUser.barberData.info.payment)
+    setSubInfo(activeUser.barberData.info.subInfo)
+    setSubPayment(activeUser.barberData.info.subPayment)
     
     setEmail(activeUser.email)
     }
@@ -63,7 +63,7 @@ export default function Home() {
   }, [info])
   return (
       activeUser && <main style={{ display: 'flex',flexDirection: 'column',width:'100vw',alignItems:'center'}}>
-        <Top image="people"first="Barbers"  whichLink={()=>redirect()}/>
+        <Top image="people"first="Barbers"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <h1>Manage your orders/subscriptions</h1>
           <div style={{width:'100%',display:'flex',marginBottom:'50px',flexWrap:'wrap'}}>
             <h1 style={{flex:1,margin:'10px',display:'flex',justifyContent:'center',alignItems:'center',textAlign:'center',borderBottom: display == 'order' ? 'solid 1px #4fad33' : 'none'}} onClick={()=>setDisplay('order')}>Orders</h1>

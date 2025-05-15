@@ -8,7 +8,7 @@ import {useAuth} from '../context/history'
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
   const [videoWidth, setVideoWidth] = useState('640')
   const [wwidth, setWidth] = useState(null);
   const router = useRouter()
@@ -39,7 +39,7 @@ export default function Home() {
   }, [wwidth])
   return (
       <main className={styles.main}>
-        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture" whichLink={()=>redirect()}/>
+        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture" whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <article style={{alignSelf:'center',display: 'flex',flexDirection: 'column',alignItems: 'center'}}>
           <h2 style={{fontSize:'3em', marginBottom:'20px',textAlign:'center'}}>Recycling and adding value to human hair</h2>
           <p style={{fontSize:'1.5em', marginBottom:'20px',textAlign:'center'}}>We collect and recycle human hair waste into organic fertilizers</p>

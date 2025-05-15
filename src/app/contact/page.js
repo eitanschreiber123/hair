@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
   const router = useRouter()
     const redirect = () => {
       if (!activeUser) {
@@ -18,7 +18,7 @@ export default function Home() {
     }
   return (
       <main>
-        <Top image="people" first="Contact"  whichLink={()=>redirect()}/>
+        <Top image="people" first="Contact"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <section style={{width:'100%',display:'flex',flexDirection:'column',alignItems:'center'}}>
         <h1 style={{fontSize:'4em'}}>Contact us</h1>
         <div style={{display:'flex', alignSelf:'center', marginBottom:'50px',width:'100%',justifyContent:'space-evenly',flexWrap:'wrap'}}>

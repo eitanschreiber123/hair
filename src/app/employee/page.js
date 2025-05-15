@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/history';
 
 export default function Home() {
-  const { users, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, changeOrderStatus } = useAuth();
+  const { users, cart, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, changeOrderStatus } = useAuth();
   const [location, setLocation] = useState(0);
   const [wwidth, setWidth] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);

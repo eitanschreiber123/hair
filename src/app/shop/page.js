@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
 export default function Home() {
-  const {users, activeUser, signUp, login, logout, updateUser, addOrder} = useAuth()
+  const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
   const router = useRouter()
   const redirect = () => {
     if (!activeUser) {
@@ -18,7 +18,7 @@ export default function Home() {
   }
   return (
       <main style={{display: 'flex',flexDirection: 'column',width:'100vw'}}>
-        <Top image="hair" first="Our products"whichLink={()=>redirect()}/>
+        <Top image="hair" first="Our products"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <section style={{display:'flex',width:'100%',justifyContent:'space-evenly',marginBottom:'50px',flexWrap:'wrap'}}>
           <div onClick={()=>router.push("/shop/hair")} style={{display:'flex',margin:'10px',flexDirection:'column',alignItems:'center',borderRadius:'10px',padding:'10px',border:'solid 1px black'}}>
           <img alt="im" width="264" height="264" src="/hair_product.png"/>
