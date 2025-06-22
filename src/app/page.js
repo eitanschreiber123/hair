@@ -84,39 +84,44 @@ export default function Home() {
           <h1>Intro</h1>
           <iframe frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Jakaya Mrisho Kikwete Foundation - Kijana Leo Season 02 Episode 001" width={videoWidth} height="360" src="https://www.youtube.com/embed/vy1xCaAFMXY?autoplay=1&amp;enablejsapi=1&amp;origin=http%3A%2F%2Flocalhost%3A3000&amp;widgetid=1&amp;forigin=http%3A%2F%2Flocalhost%3A3000%2F&amp;aoriginsup=1&amp;vf=6"></iframe>
           <h1>Articles</h1>
-          <Link href="#" className={styles.box}>
+          <Link href="https://www.nationalgeographic.com/environment/article/recycle-human-hair-oil-spills-fertilizer" className={styles.box}>
             <img alt="im" width="48" height="48" src="/square.png"/>
             <p>"Your hair is surprisingly recyclable" - National Geographic Environment</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
-          <Link href="#" className={styles.box}>
+          <Link href="https://issuu.com/landmarine/docs/paa_102_precision-air/18" className={styles.box}>
             <img alt="im" width="48" height="48" src="/logo_green.png"/>
             <p>Inflight Magazine Feature - Paa by Precision Air</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
-          <Link href="#" className={styles.box}>
+          <Link href="https://www.thecitizen.co.tz/tanzania/magazines/success/-from-school-project-to-fully-fledged-business-3301092?fbclid=IwAR0GFcPZcQ_n_RRJwGydV9WTUBKSzmxIBV3SOkSXEdTshqdMFwALvY6gzVE" className={styles.box}>
             <img alt="im" width="48" height="48" src="/science.png"/>
             <p>From school project to fully-fledged business - The Citizen</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
           <h1>Video Features</h1>
-          <Link href="#" className={styles.box}>
+          <Link href="https://youtu.be/vy1xCaAFMXY?feature=shared" className={styles.box}>
+            <img alt="im" width="48" height="48" src="/last_link.jpg"/>
+            <p>The Award Winning KIJANA LEO TV Programme</p>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+          </Link>
+          <Link href="https://youtu.be/OAC87Te3SUU" className={styles.box}>
             <img alt="im" width="48" height="48" src="/woman.png"/>
             <p>As Seen on CGTN</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
-          <Link href="#" className={styles.box}>
+          <Link href="https://www.youtube.com/watch?v=qiWLCC6P2Yk" className={styles.box}>
             <img alt="im" width="48" height="48" src="/woman_leo.png"/>
             <p>As Seen on Voice Of America</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
           <h1>Recognitions</h1>
-          <Link href="#" className={styles.box}>
+          <Link href="https://www.facebook.com/share/p/1Fwvh1SspM/" className={styles.box}>
             <img alt="im" width="48" height="48" src="/logo_blue.png"/>
-            <p>Global Student Entrepreneur Awards</p>
+            <p>Westerwelle Foundation Entrepreneurship Supports</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
-          <Link href="#" className={styles.box}>
+          <Link href="https://anzishaprize.org/fellows/david-denis/#:~:text=David%20Denis%2C%20a%2022%2Dyear,Entrepreneurs'%20by%20the%20Anzisha%20Prize." className={styles.box}>
             <img alt="im" width="48" height="48" src="/logo_people.png"/>
             <p>Anzisha Prize</p>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>

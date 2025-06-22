@@ -16,6 +16,7 @@ const BarberDataTypeSchema = new mongoose.Schema({orders: [], info:BarberInfoTyp
 const UserTypeSchema = new mongoose.Schema({name: String,email: String,password: String,customerData: CustomerDataTypeSchema, barberData:BarberDataTypeSchema}, { strict: false })
 const ActiveUserTypeSchema = new mongoose.Schema({ user: UserTypeSchema })
 const EmployeeTypeSchema = new mongoose.Schema({name: String,email: String,password: String})
+const CustomerOrderTypeSchema = new mongoose.Schema({})
 
 export const ActiveUserType = mongoose.models.ActiveUserType || mongoose.model("ActiveUserType", ActiveUserTypeSchema, "activeusertypes");
 export const CartItemType = mongoose.models.CartItemType || mongoose.model("CartItemType", CartItemTypeSchema, "cartitemtypes");
@@ -32,3 +33,4 @@ export const BarberInfoType = mongoose.models.BarberInfoType || mongoose.model("
 export const CustomerSubType = mongoose.models.CustomerSubType || mongoose.model("CustomerSubType", CustomerSubTypeSchema, "customersubtypes")
 export const CustomerDataType = mongoose.models.CustomerDataType || mongoose.model("CustomerDataType", CustomerDataTypeSchema, "customerdatatypes")
 export const BarberDataType = mongoose.models.BarberDataType || mongoose.model("BarberDataType", BarberDataTypeSchema, "barberdatatypes")
+export const CustomerOrderType = mongoose.models.CustomerOrderType || mongoose.model("CustomerOrderType", CustomerOrderTypeSchema, "customerOrdertypes")

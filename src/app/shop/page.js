@@ -21,11 +21,11 @@ export default function Home() {
         <Top image="hair" first="Our products"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <section style={{display:'flex',width:'100%',justifyContent:'space-evenly',marginBottom:'50px',flexWrap:'wrap'}}>
           <div onClick={()=>router.push("/shop/hair")} style={{display:'flex',margin:'10px',flexDirection:'column',alignItems:'center',borderRadius:'10px',padding:'10px',border:'solid 1px black'}}>
-          <img alt="im" width="264" height="264" src="/hair_product.png"/>
+          <Image width={264} height={264} src="/hair_product.png"/>
             <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Buy</button>
           </div>
           <div onClick={()=>router.push("/shop/liquid")} style={{display:'flex',margin:'10px',flexDirection:'column',alignItems:'center',borderRadius:'10px',padding:'10px',border:'solid 1px black'}}>
-          <img alt="im" width="264" height="264" src="/liquid.png"/>
+          <Image width={264} height={264} src="/liquid.png"/>
             <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}}>Buy</button>
           </div>
         </section>

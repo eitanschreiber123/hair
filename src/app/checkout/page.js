@@ -84,6 +84,8 @@ export default function Home() {
       <main>
         <Top image="hair" first="Checkout"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <h1>Checkout</h1>
+        <section style={{display:'flex'}}>
+            <div style={{flex:2}}>
         <div style={{outline:'none',color:'hsl(0 0% 45.1%)',padding:'.25rem',backgroundColor:'hsl(0 0% 96.1%)',borderRadius:'10px',justifyContent:'center',alignItems:'center',display:'grid',border:'none',gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',height:'2.5rem'}}>
             <button style={{cursor:'pointer',border:'none'}} onClick={()=>setContent('shipping')}>shipping</button>
             <button style={{cursor:'pointer',border:'none'}} disabled={address == '' || (billingAddress == '' && isSame == false)}onClick={()=>setContent('payment')}>payment</button>
@@ -150,21 +152,91 @@ export default function Home() {
                     </div>
                     <button>Back to Payment</button>
                 </div>}
-            <div style={{display:'flex',flexDirection:'column'}}>
+                </section>
+                </div>
+            <div style={{display:'flex',flexDirection:'column',flex:1}}>
                <h1>Order Summary</h1>
                <div style={{outline:'none',color:'hsl(0 0% 45.1%)',padding:'.25rem',backgroundColor:'hsl(0 0% 96.1%)',borderRadius:'10px',justifyContent:'center',alignItems:'center',display:'grid',border:'none',gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',height:'2.5rem'}}>
             <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSummary('one')}>One time</button>
             <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSummary('sub')}>Subscription</button>
             </div>
-               {summary == 'one' ? <div></div>
-               : <div></div>}
-               <div>
-                 <h1>Total:</h1>
-                 <h1>$227.67</h1>
+               {summary == 'one' ? <div>
+                <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/hair_product.png"/>
+                    <p>Hair</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.one.hair}</p>
+                        <p>price: {cart.one.hair * .2}</p>
+                    </div>
+                </div>
+                <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/liquid.png"/>
+                    <p>Liquid</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.one.liquid}</p>
+                        <p>price: {cart.one.liquid * 3.68}</p>
+                    </div>
+                </div>
                </div>
-               <button>Place order</button>
+               : <div>
+                  <div>
+                    <h2>Weekly</h2>
+                    <div style={{display:'flex', justifyContent:'space-between'}}>
+                        <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/hair_product.png"/>
+                    <p>Hair</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.sub.weekly.hair}</p>
+                        <p>price: {cart.sub.weekly.hair * .2}</p>
+                    </div>
+                </div>
+                <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/liquid.png"/>
+                    <p>Liquid</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.sub.weekly.liquid}</p>
+                        <p>price: {cart.sub.weekly.liquid * 3.68}</p>
+                    </div>
+                </div>
+                  </div>
+                  <div>
+                    <h2>Monthly</h2>
+                    <div style={{display:'flex', justifyContent:'space-between'}}>
+                        <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/hair_product.png"/>
+                    <p>Hair</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.sub.monthly.hair}</p>
+                        <p>price: {cart.sub.monthly.hair * .2}</p>
+                    </div>
+                </div>
+                <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div style={{display:'flex'}}>
+                    <Image width={40} height={40} src="/liquid.png"/>
+                    <p>Liquid</p>
+                    </div>
+                    <div>
+                        <p>qty: {cart.sub.monthly.liquid}</p>
+                        <p>price: {cart.sub.monthly.liquid * 3.68}</p>
+                    </div>
+                </div>
+                  </div>
+                </div>}
+               <div style={{display:'flex',justifyContent:'space-between'}}>
+                 <h1>Total:</h1>
+                 <h1>${(cart.one.hair * .2) + (cart.one.liquid * 3.68) + (cart.sub.weekly.hair * .2) + (cart.sub.weekly.liquid * 3.68) + (cart.sub.monthly.hair * .2) + (cart.sub.monthly.liquid * 3.68)}</h1>
+               </div>
+               <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',border:'none'}}>Place order</button>
             </div>
-        </section>
+            </section>
       </main>
   );
 }

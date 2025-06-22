@@ -20,7 +20,7 @@ export default function Home() {
       }
     }
   return (
-    <main style={{display: 'flex',flexDirection: 'column',width:'100vw'}}>
+    <main style={{display: 'flex',flexDirection: 'column',width:'100vw',alignItems:'flex-start'}}>
     <Top image="hair" first="Our products"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
     <section style={{display:'flex',flexWrap:'wrap'}}>
     <img alt="im" width="480" height="480" src="/liquid.png" style={{margin:'20px 0'}}/>
@@ -40,7 +40,7 @@ export default function Home() {
       <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>addItemToCart({ type: 'one', product: 'hair' }, cart.hair)}>Add to cart</button>
       </div>
     </section>
-    <Link href="/cart">Go to cart</Link>
+    <Link style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} href="/cart">Go to cart</Link>
     <footer style={{width:'100%'}}>
       <hr />
       <div style={{width:'100%',display:'flex',justifyContent:'space-evenly', alignItems:'center'}}>
