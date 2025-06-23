@@ -13,6 +13,9 @@ export default function Home() {
   const [method, setMethod] = useState('card')
   const [summary, setSummary] = useState({})
   const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [country, setCountry] = useState('')
+  const [zip, setZip] = useState('')
   const [billingAddress, setBillingAddress] = useState('')
   const [isSame, setSame] = useState(false)
   const [crypto, setCrypto] = useState('')
@@ -21,15 +24,22 @@ export default function Home() {
   const [exp, setExp] = useState('')
   const [code, setCode] = useState('')
   const [saved, saveCard] = useState(false)
+  const [rightSide, setSide] = useState('one')
+  const [paypal, setPaypal] = useState('')
   const router = useRouter()
-    const redirect = () => {
+  useEffect(() => {
+    if (!activeUser || Object.keys(activeUser).length === 0) {
+      router.replace(`/sign?from=/checkout`)
+    }
+  }, [activeUser, router])
+    /*const redirect = () => {
       if (!activeUser) {
         router.push("/sign")
       }
       else {
         router.push("/send")
       }
-    }
+    }*/
     useEffect(() => {
         setSummary({
     one: {
@@ -82,8 +92,8 @@ export default function Home() {
     })
   return (
       <main>
-        <Top image="hair" first="Checkout"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
-        <h1>Checkout</h1>
+        {/*<Top image="hair" first="Checkout"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        */}<h1>Checkout</h1>
         <section style={{display:'flex'}}>
             <div style={{flex:2}}>
         <div style={{outline:'none',color:'hsl(0 0% 45.1%)',padding:'.25rem',backgroundColor:'hsl(0 0% 96.1%)',borderRadius:'10px',justifyContent:'center',alignItems:'center',display:'grid',border:'none',gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',height:'2.5rem'}}>
@@ -100,7 +110,7 @@ export default function Home() {
                         <input type="checkbox" checked={isSame} onChange={e => setSame(e.target.checked)}/>
                         <p>Billing address is the same as shipping address</p>
                     </div>
-                    <button>Continue to Payment</button>
+                    <button disabled={address == '' || (billingAddress == '' && isSame == false)}onClick={()=>setContent('payment')}>Continue to Payment</button>
                 </div>
                 : mainContent == 'payment' ? <div>
                     <h1>Payment Information</h1>
@@ -110,7 +120,7 @@ export default function Home() {
             <button style={{cursor:'pointer',border:'none'}} onClick={()=>setMethod('paypal')}>Paypal</button>
             <button style={{cursor:'pointer',border:'none'}} onClick={()=>setMethod('crypto')}>Crypto</button>
         </div>
-        <div>
+        {method == 'card' ? <div>
         <div>
             <p>Card Number</p>
             <input name="cardNumber" value={cardNumber} onChange={e => setCardNumber(e.target.value)}/>
@@ -134,21 +144,35 @@ export default function Home() {
                         <p>Save this card for future purchases</p>
                     </div>
                     </div>
+                    : method == 'paypal' ? <div>
+                        <p>Paypal account</p>
+                        <input />
+                        </div>
+                        : <div>
+                            <p>Bitcoin wallet address</p>
+                        <input />
+                            </div>}
                     <div style={{display:'flex'}}>
                         <button>Back to Shipping</button>
                         <button>Continue to Review</button>
                     </div>
                 </div>
-                : <div style={{display:'flex'}}> 
+                : <div style={{display:'flex', flexDirection:'column'}}> 
+                <div style={{display:'flex'}}>
                     <div>
                         <h1>Shipping Details</h1>
-                        <div></div>
+                        <div>
+                            <p>{address}</p>
+                            <p>{city},{zip}</p>
+                            <p>{country}</p>
+                        </div>
                     </div>
                     <div>
                         <h1>Payment Details</h1>
                         <div>
-                            <p></p>
+                          <p>{method == 'card' ? `Card ending in ${cardNumber.replace(/\D/g, '').slice(-4)}` : method == 'paypal' ? `Paypal account ${paypal}` : `Crypto wallet ${crypto}`}</p>
                         </div>
+                    </div>
                     </div>
                     <button>Back to Payment</button>
                 </div>}
@@ -157,10 +181,10 @@ export default function Home() {
             <div style={{display:'flex',flexDirection:'column',flex:1}}>
                <h1>Order Summary</h1>
                <div style={{outline:'none',color:'hsl(0 0% 45.1%)',padding:'.25rem',backgroundColor:'hsl(0 0% 96.1%)',borderRadius:'10px',justifyContent:'center',alignItems:'center',display:'grid',border:'none',gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',height:'2.5rem'}}>
-            <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSummary('one')}>One time</button>
-            <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSummary('sub')}>Subscription</button>
+            <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSide('one')}>One time</button>
+            <button style={{cursor:'pointer',border:'none'}} onClick={()=>setSide('sub')}>Subscription</button>
             </div>
-               {summary == 'one' ? <div>
+               {rightSide == 'one' ? <div>
                 <div style={{display:'flex', justifyContent:'space-between'}}>
                     <div style={{display:'flex'}}>
                     <Image width={40} height={40} src="/hair_product.png"/>
