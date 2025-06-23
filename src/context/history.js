@@ -31,10 +31,12 @@ export const AuthProvider = ({ children }) => {
     const newData = async () => {
       const data = await fetch('http://localhost:3000/api/data')
   const users = await data.json()
+  console.log(users)
   setUsers(users)
     }
     newData()
   }, [])
+
   useEffect(() => {
     const newData = async () => {
       const data = await fetch('http://localhost:3000/api/pickup')

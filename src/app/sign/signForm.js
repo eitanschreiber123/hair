@@ -15,8 +15,6 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(()=> console.log(from))
-
   const handleSignUp = () => signUp(name, email, password)
   useEffect(() => {
     if (activeUser) {
