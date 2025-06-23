@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import Top from "@/components/top";
-import { useRouter } from 'next/navigation'
 import {useAuth} from '../context/history'
 import { useEffect, useState } from "react";
 
@@ -11,15 +10,6 @@ export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
   const [videoWidth, setVideoWidth] = useState('640')
   const [wwidth, setWidth] = useState(null);
-  const router = useRouter()
-  const redirect = () => {
-    if (!activeUser) {
-      router.push("/sign")
-    }
-    else {
-      router.push("/send")
-    }
-  }
   useEffect(() => {
     if (typeof window !== 'undefined') {
       function handleResize() {
@@ -39,7 +29,7 @@ export default function Home() {
   }, [wwidth])
   return (
       <main className={styles.main}>
-        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture" whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        <Top image="people" first="Cut off recycle"second="A locally-sourced renewable resource for agriculture" amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
         <article style={{alignSelf:'center',display: 'flex',flexDirection: 'column',alignItems: 'center'}}>
           <h2 style={{fontSize:'3em', marginBottom:'20px',textAlign:'center'}}>Recycling and adding value to human hair</h2>
           <p style={{fontSize:'1.5em', marginBottom:'20px',textAlign:'center'}}>We collect and recycle human hair waste into organic fertilizers</p>
@@ -77,7 +67,7 @@ export default function Home() {
             </svg></Link></div>
       <div style={{alignSelf:'center', display:'flex',width:'100%',justifyContent:'space-evenly', marginBottom:'50px',flexWrap:'wrap'}}>
           <Link style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',margin:'10px'}} href="/shop">Shop</Link>
-          <Link href={activeUser ? "/send" : "/sign"} style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em', border:'none',margin:'10px'}}>Send in hair</Link>
+          <Link href="/send" style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em', border:'none',margin:'10px'}}>Send in hair</Link>
           <Link style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',margin:'10px'}} href="https://invest.somoafrica.org/public/2659/CUTOFF%20RECYCLE%20LIMITED">Invest</Link>
         </div>
         <section style={{alignItems:'center',display:'flex',flexDirection:'column'}}>

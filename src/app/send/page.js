@@ -24,10 +24,9 @@ export default function Home() {
   const [newOrder, setNewOrder] = useState({boxes: 0,name:'',address:'',email:'',payment:'',info:'', location:'Cape town, south africa'})
   const [newSub, setNewSub] = useState({sub:'weekly',boxes: 0,name:'',address:'',email:'',payment:'',info:'',location:'Cape town, south africa'})
   const router = useRouter()
-  const redirect = () => router.push(activeUser ? "/send" : "/sign");
   useEffect(() => {
     if (!activeUser) {
-      router.push("/sign")
+      router.replace("/sign?from=/send")
     }
   })
   useEffect(() => {
@@ -63,7 +62,7 @@ export default function Home() {
   }, [info])
   return (
       activeUser && <main style={{ display: 'flex',flexDirection: 'column',width:'100vw',alignItems:'center'}}>
-        <Top image="people"first="Barbers"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        <Top image="people"first="Barbers" amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <h1>Manage your orders/subscriptions</h1>
           <div style={{width:'100%',display:'flex',marginBottom:'50px',flexWrap:'wrap'}}>
             <h1 style={{flex:1,margin:'10px',display:'flex',justifyContent:'center',alignItems:'center',textAlign:'center',borderBottom: display == 'order' ? 'solid 1px #4fad33' : 'none'}} onClick={()=>setDisplay('order')}>Orders</h1>

@@ -10,15 +10,17 @@ export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser} = useAuth()
   const router = useRouter();
   const searchParams = useSearchParams()
-  const from = searchParams.get('from') || '/'
+  const from = searchParams.get('from')
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(()=> console.log(from))
+
   const handleSignUp = () => signUp(name, email, password)
   useEffect(() => {
     if (activeUser) {
-    router.push(from)
+    router.push(from || "/")
     }
   }, [users])
   return (
@@ -48,7 +50,7 @@ export default function Home() {
       
       <button onClick={handleSignUp}>Sign Up</button>
     </div>
-    <p>Already have an account <Link href="/login">Login</Link></p>
+    <p>Already have an account <Link href={from ? `/login?from=${from}` : "/login"}>Login</Link></p>
       </main>
     </div>
   );

@@ -1,7 +1,6 @@
 'use client'
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/history';
 
 export default function Home() {
@@ -18,24 +17,12 @@ export default function Home() {
     {f:'input', c:true}
   ])
   const [userFilters, setUserFilters] = useState([])
-
-  const router = useRouter();
-
-  const redirect = () => {
-    if (!activeUser) {
-      router.push("/sign");
-    } else {
-      router.push("/send");
-    }
-  };
-
   useEffect(() => {
     if (pickupOrders && pickupOrders.length > 0) {
       console.log(pickupOrders)
       confirm(pickupOrders);
     }
   }, []);
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       function handleResize() {

@@ -4,7 +4,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation'
 import { useRef, useState, useEffect } from "react";
-const Top = ({image, first, second, whichLink, secondLink, amount}) => {
+const Top = ({image, first, second, secondLink, amount}) => {
   const [see, change] = useState('transparent')
   const [behind, setBehind] = useState('transparent')
   const [space, setSpace] = useState('50px')
@@ -48,7 +48,7 @@ const Top = ({image, first, second, whichLink, secondLink, amount}) => {
           <Image alt="top" src="/no_white.png" style={{borderRadius:'50px',backgroundColor:behind}} width={96} height={96}/>
           <div style={{display:'flex'}}>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/about">About us</Link>
-            <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>whichLink()}>Barber Portal</p>
+            <Link style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} href="/send">Barber Portal</Link>
             <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>secondLink()}>Employee Portal</p>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/impact">Our impact</Link>
@@ -100,7 +100,7 @@ const Top = ({image, first, second, whichLink, secondLink, amount}) => {
           <Image src="/no_white.png" width={96} height={96}/>
           <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/about">About us</Link>
-            <p style={{fontSize:'1.5em',cursor:'pointer',margin:'20px 0'}} onClick={()=>whichLink()}>Barber Portal</p>
+            <Link style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} href="/send">Barber Portal</Link>
             <p style={{fontSize:'1.5em',cursor:'pointer',margin:'20px 0'}} onClick={()=>secondLink()}>Employee Portal</p>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',margin:'20px 0'}} href="/impact">Our impact</Link>

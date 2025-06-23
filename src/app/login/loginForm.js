@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams  } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,9 +20,8 @@ export default function Home() {
       throw new Error("Invalid email or password")
     } else {
       login(email, password)
-      router.push(from);
+      router.push(from || "/");
     }
-    
   };
   return (
     <div className={styles.page}>
@@ -45,7 +44,7 @@ export default function Home() {
       />
       <button onClick={handleLogin}>Login</button>
     </div>
-    <p>Dont have an account <Link href="/sign">sign up</Link></p>
+    <p>Dont have an account <Link href={from ? `/sign?from=${from}` : "/sign"}>sign up</Link></p>
       </main>
     </div>
   );

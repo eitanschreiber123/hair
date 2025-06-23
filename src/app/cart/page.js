@@ -11,17 +11,9 @@ export default function Home() {
   const [purchaseType, setPurchase] = useState('one')
   const [sub, setSub] = useState('weekly')
   const router = useRouter()
-    const redirect = () => {
-      if (!activeUser) {
-        router.push("/sign")
-      }
-      else {
-        router.push("/send")
-      }
-    }
     const redirectCheckout = () => {
     if (!activeUser) {
-      router.push("/sign")
+      router.push("/sign?from=/checkout")
     }
     else {
       router.push("/checkout")
@@ -29,7 +21,7 @@ export default function Home() {
   }
   return (
       <main>
-        <Top image="hair" first="Cart"whichLink={()=>redirect()} amount={cart.one.hair+cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        <Top image="hair" first="Cart"amount={cart.one.hair+cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-evenly'}}>
         <button style={{backgroundColor:purchaseType == 'one'? '#4fad33' : 'white',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>setPurchase('one')}>One time purchase</button>
         <button style={{backgroundColor:purchaseType == 'sub'? '#4fad33' : 'white',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em'}} onClick={()=>setPurchase('sub')}>Subscription</button>
@@ -61,7 +53,7 @@ export default function Home() {
               </div>
               </section>
               <h1>Total: {purchaseType == 'one' ? (cart.one.liquid * 3.68) + (cart.one.hair * .2) : (cart.sub[sub].liquid * 3.68) + (cart.sub[sub].hair * .2)}$</h1>
-              <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',border:'none'}} onClick={()=>redirectCheckout()}>Checkout</button>
+              <button style={{backgroundColor:'#4fad33',padding:'5px 10px', borderRadius:'50px',fontSize:'1.5em',border:'none'}} onClick={()=>router.push("/checkout")}>Checkout</button>
       </main>
   );
 }

@@ -2,23 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import Top from "@/components/top";
-import { useRouter } from 'next/navigation'
 import {useAuth} from '../../context/history'
 
 export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
-  const router = useRouter()
-    const redirect = () => {
-      if (!activeUser) {
-        router.push("/sign")
-      }
-      else {
-        router.push("/send")
-      }
-    }
   return (
       <main>
-        <Top image="people" first="Contact"  whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        <Top image="people" first="Contact" amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
           <section style={{width:'100%',display:'flex',flexDirection:'column',alignItems:'center'}}>
         <h1 style={{fontSize:'4em'}}>Contact us</h1>
         <div style={{display:'flex', alignSelf:'center', marginBottom:'50px',width:'100%',justifyContent:'space-evenly',flexWrap:'wrap'}}>

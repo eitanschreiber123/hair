@@ -28,18 +28,10 @@ export default function Home() {
   const [paypal, setPaypal] = useState('')
   const router = useRouter()
   useEffect(() => {
-    if (!activeUser || Object.keys(activeUser).length === 0) {
+    if (!activeUser) {
       router.replace(`/sign?from=/checkout`)
     }
   }, [activeUser, router])
-    /*const redirect = () => {
-      if (!activeUser) {
-        router.push("/sign")
-      }
-      else {
-        router.push("/send")
-      }
-    }*/
     useEffect(() => {
         setSummary({
     one: {
@@ -92,8 +84,8 @@ export default function Home() {
     })
   return (
       <main>
-        {/*<Top image="hair" first="Checkout"whichLink={()=>redirect()} amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
-        */}<h1>Checkout</h1>
+        <Top image="hair" first="Checkout"amount={cart.one.hair +cart.one.liquid+cart.sub.weekly.hair +cart.sub.weekly.liquid+cart.sub.monthly.hair +cart.sub.monthly.liquid}/>
+        <h1>Checkout</h1>
         <section style={{display:'flex'}}>
             <div style={{flex:2}}>
         <div style={{outline:'none',color:'hsl(0 0% 45.1%)',padding:'.25rem',backgroundColor:'hsl(0 0% 96.1%)',borderRadius:'10px',justifyContent:'center',alignItems:'center',display:'grid',border:'none',gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',height:'2.5rem'}}>
