@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   // Load from localStorage on mount
   useEffect(() => {
     const newData = async () => {
-      const data = await fetch('http://localhost:3000/api/data')
+      const data = await fetch('/api/data')
   const users = await data.json()
   console.log(users)
   setUsers(users)
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const newData = async () => {
-      const data = await fetch('http://localhost:3000/api/pickup')
+      const data = await fetch('/api/pickup')
   const users = await data.json()
   setPickupOrders(users)
     }
@@ -260,7 +260,7 @@ const addOrder = async (order) => {
 
 const addPickupOrder = async (location, order) => {
   try {
-    const res = await fetch("http://localhost:3000/api/pickup", {
+    const res = await fetch("/api/pickup", {
       method: "PUT",
       body: JSON.stringify({ location, order }),
     });
