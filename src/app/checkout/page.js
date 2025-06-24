@@ -98,6 +98,9 @@ export default function Home() {
                     <h1>Shipping Information</h1>
                     <p>Shipping Address</p>
                     <input name="address" value={address} onChange={e => setAddress(e.target.value)}/>
+                    <input name="country" value={country} onChange={e => setCountry(e.target.value)}/>
+                    <input name="city" value={city} onChange={e => setCity(e.target.value)}/>
+                    <input name="zip" value={zip} onChange={e => setZip(e.target.value)}/>
                     <div>
                         <input type="checkbox" checked={isSame} onChange={e => setSame(e.target.checked)}/>
                         <p>Billing address is the same as shipping address</p>
