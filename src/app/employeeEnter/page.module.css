@@ -1,0 +1,6 @@
+.page {
+    display: flex;
+    width: 100vw;
+    flex-direction: column;
+    min-height: 100vh;
+  }

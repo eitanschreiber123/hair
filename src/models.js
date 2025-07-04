@@ -1,6 +1,7 @@
 import connectDB from "../lib/mongodb";
 import mongoose from "mongoose";
 
+const AddressTypeSchema = new mongoose.Schema({line1: String, country: String, city:String,zip: Number})
 const CartItemTypeSchema = new mongoose.Schema({ hair: Number, liquid: Number })
 const OrderTypeSchema = new mongoose.Schema({ date:String,boxes: Number,name:String,address:String,email:String,payment:String,info:String, location:String,user: { type: mongoose.Schema.Types.ObjectId, ref: "UserType" } }, { strict: false });
 const OtherOrderTypeSchema = new mongoose.Schema({name: String, date: String, status: String})
@@ -16,7 +17,12 @@ const BarberDataTypeSchema = new mongoose.Schema({orders: [], info:BarberInfoTyp
 const UserTypeSchema = new mongoose.Schema({name: String,email: String,password: String,customerData: CustomerDataTypeSchema, barberData:BarberDataTypeSchema}, { strict: false })
 const ActiveUserTypeSchema = new mongoose.Schema({ user: UserTypeSchema })
 const EmployeeTypeSchema = new mongoose.Schema({name: String,email: String,password: String})
-const CustomerOrderTypeSchema = new mongoose.Schema({})
+const ActiveEmployeeTypeSchema = new mongoose.Schema({ user: EmployeeTypeSchema })
+const CustomerOrderTypeSchema = new mongoose.Schema({price:Number,items:CartItemTypeSchema,status:{
+      type: String,
+      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      default: "pending",
+    },address:AddressTypeSchema, user: { type: mongoose.Schema.Types.ObjectId, ref: "UserType" } }, { strict: false })
 
 export const ActiveUserType = mongoose.models.ActiveUserType || mongoose.model("ActiveUserType", ActiveUserTypeSchema, "activeusertypes");
 export const CartItemType = mongoose.models.CartItemType || mongoose.model("CartItemType", CartItemTypeSchema, "cartitemtypes");
@@ -34,3 +40,5 @@ export const CustomerSubType = mongoose.models.CustomerSubType || mongoose.model
 export const CustomerDataType = mongoose.models.CustomerDataType || mongoose.model("CustomerDataType", CustomerDataTypeSchema, "customerdatatypes")
 export const BarberDataType = mongoose.models.BarberDataType || mongoose.model("BarberDataType", BarberDataTypeSchema, "barberdatatypes")
 export const CustomerOrderType = mongoose.models.CustomerOrderType || mongoose.model("CustomerOrderType", CustomerOrderTypeSchema, "customerOrdertypes")
+export const AddressType = mongoose.models.AddressType || mongoose.model("AddressType", AddressTypeSchema, "addresstypes")
+export const AvtiveEmployeeType = mongoose.models.AvtiveEmployeeType || mongoose.model("ActiveEmployeeTypeSchema", ActiveEmployeeTypeSchema, "activeemployeetypes")

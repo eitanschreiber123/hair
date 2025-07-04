@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import Top from "@/components/top";
 import {useAuth} from '../context/history'
 import { useEffect, useState } from "react";
+import Tanzania from "@/components/tanzania";
 
 export default function Home() {
   const {users, activeUser, signUp, login, logout, updateUser, addOrder, cart} = useAuth()
@@ -117,6 +118,7 @@ export default function Home() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-5 w-5 text-gray-400"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
           </Link>
         </section>
+        <Tanzania />
         <footer style={{width:'100%'}}>
           <hr />
           <div style={{width:'100%',display:'flex',justifyContent:'space-evenly', alignItems:'center'}}>

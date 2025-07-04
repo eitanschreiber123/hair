@@ -49,7 +49,7 @@ const Top = ({image, first, second, secondLink, amount}) => {
           <div style={{display:'flex'}}>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/about">About us</Link>
             <Link style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} href="/send">Barber Portal</Link>
-            <p style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} onClick={()=>secondLink()}>Employee Portal</p>
+            <Link style={{fontSize:'1.5em',color:'white',cursor:'pointer'}} href="/employee">Employee Portal</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/shop">Our products</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/impact">Our impact</Link>
             <Link style={{fontSize:'1.5em',color:'white'}} href="/contact">Contact</Link>

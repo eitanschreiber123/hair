@@ -1,10 +1,11 @@
 'use client'
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../../context/history';
 
 export default function Home() {
-  const { users, cart, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, changeOrderStatus } = useAuth();
+  const { users, employees, employeeLogin, activeEmployee, cart, activeUser, signUp, login, logout, updateUser, addOrder, addPickupOrder, pickupOrders, changeOrderStatus } = useAuth();
   const [location, setLocation] = useState(0);
   const [wwidth, setWidth] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -17,6 +18,12 @@ export default function Home() {
     {f:'input', c:true}
   ])
   const [userFilters, setUserFilters] = useState([])
+  const router = useRouter()
+  useEffect(() => {
+      if (!activeEmployee) {
+        router.replace("/employeeEnter?from=/employee")
+      }
+    })
   useEffect(() => {
     if (pickupOrders && pickupOrders.length > 0) {
       console.log(pickupOrders)

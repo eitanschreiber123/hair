@@ -7,8 +7,10 @@ const AuthContext = createContext({});
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [pickupOrders, setPickupOrders] = useState([])
   const [activeUser, setActiveUser] = useState(null);
+  const [activeEmployee, setActiveEmployee] = useState(null);
   const [cart, setCart] = useState({
     one: {
         hair: 0,
@@ -31,8 +33,16 @@ export const AuthProvider = ({ children }) => {
     const newData = async () => {
       const data = await fetch('/api/data')
   const users = await data.json()
-  console.log(users)
   setUsers(users)
+    }
+    newData()
+  }, [])
+
+  useEffect(() => {
+    const newData = async () => {
+      const data = await fetch('/api/employee')
+  const users = await data.json()
+  setEmployees(users)
     }
     newData()
   }, [])
@@ -58,9 +68,10 @@ export const AuthProvider = ({ children }) => {
   // Save to localStorage on users or activeUser change
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("employees", JSON.stringify(employees));
     localStorage.setItem("activeUser", JSON.stringify(activeUser));
     localStorage.setItem("pickupOrders", JSON.stringify(pickupOrders));
-  }, [users, activeUser, pickupOrders]);
+  }, [users, employees, activeUser, pickupOrders]);
 
   // Sign up a new user
   const signUp = async (name, email, password) => {
@@ -132,6 +143,25 @@ export const AuthProvider = ({ children }) => {
 
     // Update active user in backend too (if needed)
     await fetch("/api/active", {
+      method: "PUT",
+      body: JSON.stringify({ user }),
+    });
+  } catch (err) {
+    console.error("Login Error:", err);
+    throw err;
+  }
+};
+
+const employeeLogin = async (email, password) => {
+  try {
+    const user = employees.find((u) => u.email === email && u.password === password);
+    if (!user) throw new Error("Invalid email or password");
+
+    // You might call an actual auth endpoint here in a real app
+    setActiveEmployee(user);
+
+    // Update active user in backend too (if needed)
+    await fetch("/api/employee", {
       method: "PUT",
       body: JSON.stringify({ user }),
     });
@@ -363,7 +393,7 @@ const changeOrderStatus = async (location, orderId, status, amount = undefined) 
 };
 
   return (
-    <AuthContext.Provider value={{ users, cart, activeUser, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders, addItemToCart, changeOrderStatus, removeItemFromCart}}>
+    <AuthContext.Provider value={{ users, cart, activeUser, activeEmployee, signUp, login, logout, updateUser, updateCustomerData, updateBarberData, addOrder, addPickupOrder, pickupOrders, addItemToCart, changeOrderStatus, removeItemFromCart, employeeLogin, employees}}>
       {children}
     </AuthContext.Provider>
   );
