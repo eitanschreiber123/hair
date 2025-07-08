@@ -41,4 +41,4 @@ export const CustomerDataType = mongoose.models.CustomerDataType || mongoose.mod
 export const BarberDataType = mongoose.models.BarberDataType || mongoose.model("BarberDataType", BarberDataTypeSchema, "barberdatatypes")
 export const CustomerOrderType = mongoose.models.CustomerOrderType || mongoose.model("CustomerOrderType", CustomerOrderTypeSchema, "customerOrdertypes")
 export const AddressType = mongoose.models.AddressType || mongoose.model("AddressType", AddressTypeSchema, "addresstypes")
-export const AvtiveEmployeeType = mongoose.models.AvtiveEmployeeType || mongoose.model("ActiveEmployeeTypeSchema", ActiveEmployeeTypeSchema, "activeemployeetypes")
+export const ActiveEmployeeType = mongoose.models.ActiveEmployeeType || mongoose.model("ActiveEmployeeTypeSchema", ActiveEmployeeTypeSchema, "activeemployeetypes")
